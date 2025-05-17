@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdk", "sdk", "{531AF015-A311-4274-8942-FDD3711EA54B}"
+	ProjectSection(SolutionItems) = preProject
+		sdk\Directory.Build.props = sdk\Directory.Build.props
+		sdk\Directory.Packages.props = sdk\Directory.Packages.props
+		sdk\README.md = sdk\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "microservices", "microservices", "{1B42315D-B717-4EEB-8C95-C637E897CCDD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "user", "user", "{675752C8-6495-4F01-A467-1D3C267311AB}"
+	ProjectSection(SolutionItems) = preProject
+		microservices\user\Directory.Build.props = microservices\user\Directory.Build.props
+		microservices\user\Directory.Packages.props = microservices\user\Directory.Packages.props
+		microservices\user\README.md = microservices\user\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "notification", "notification", "{775693D5-D5DA-4E29-8BC2-B2516A6E3010}"
+	ProjectSection(SolutionItems) = preProject
+		microservices\notification\Directory.Build.props = microservices\notification\Directory.Build.props
+		microservices\notification\Directory.Packages.props = microservices\notification\Directory.Packages.props
+		microservices\notification\README.md = microservices\notification\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "order", "order", "{D9DA084B-A79A-440A-BBE9-BFCCBC80ECB9}"
+	ProjectSection(SolutionItems) = preProject
+		microservices\order\Directory.Build.props = microservices\order\Directory.Build.props
+		microservices\order\Directory.Packages.props = microservices\order\Directory.Packages.props
+		microservices\order\README.md = microservices\order\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gateway", "gateway", "{9BD88865-CE44-4E9C-900D-AC3497104E61}"
+	ProjectSection(SolutionItems) = preProject
+		gateway\Directory.Build.props = gateway\Directory.Build.props
+		gateway\Directory.Packages.props = gateway\Directory.Packages.props
+		gateway\README.md = gateway\README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{675752C8-6495-4F01-A467-1D3C267311AB} = {1B42315D-B717-4EEB-8C95-C637E897CCDD}
+		{775693D5-D5DA-4E29-8BC2-B2516A6E3010} = {1B42315D-B717-4EEB-8C95-C637E897CCDD}
+		{D9DA084B-A79A-440A-BBE9-BFCCBC80ECB9} = {1B42315D-B717-4EEB-8C95-C637E897CCDD}
+	EndGlobalSection
+EndGlobal
