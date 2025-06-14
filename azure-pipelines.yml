@@ -1,0 +1,60 @@
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+      - feature/*
+      - feat/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  SONAR_PROJECT_KEY: 'bizca_bizca'
+  SONAR_ORGANIZATION: 'bizca'
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET SDK'
+    inputs:
+      packageType: 'sdk'
+      version: '8.0.x'
+
+  - checkout: self
+    fetchDepth: 0
+
+  - task: SonarCloudPrepare@1
+    displayName: 'Prepare SonarCloud analysis'
+    inputs:
+      SonarCloud: 'SonarCloud'
+      organization: '$(SONAR_ORGANIZATION)'
+      scannerMode: 'MSBuild'
+      projectKey: '$(SONAR_PROJECT_KEY)'
+      projectName: 'bizca'
+      extraProperties: |
+        sonar.cs.vscoveragexml.reportsPaths=**/coverage.cobertura.xml
+      
+
+  - script: |
+      dotnet restore bizca.sln
+      dotnet build bizca.sln --no-restore --configuration $(buildConfiguration)
+    displayName: 'Restore and Build with .sln'
+    
+  - script: ls -R
+    displayName: 'Debug file tree after build'
+
+  - script: cat $(System.DefaultWorkingDirectory)/bizca.sln
+    displayName: 'Display solution file content'
+
+  - script: |
+      dotnet test bizca.sln --no-build --configuration $(buildConfiguration) --collect:"XPlat Code Coverage"
+    displayName: 'Run Tests with Coverage'
+
+  - task: SonarCloudAnalyze@1
+    displayName: 'Run SonarCloud Analysis'
+
+  - task: SonarCloudPublish@1
+    displayName: 'Publish SonarCloud Results'
+    inputs:
+      pollingTimeoutSec: '300'
