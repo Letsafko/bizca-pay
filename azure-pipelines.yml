@@ -1,0 +1,64 @@
+
+
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+      - feature/*
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: 'Release'
+  SONAR_SCANNER_MODE: 'MSBuild'
+  SONAR_PROJECT_KEY: 'bizca_bizca'
+  SONAR_ORGANIZATION: 'bizca'
+  SONAR_HOST_URL: 'https://sonarcloud.io'
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET SDK'
+    inputs:
+      packageType: 'sdk'
+      version: '8.0.x'
+      installationPath: $(Agent.ToolsDirectory)/dotnet
+
+  - task: SonarCloudPrepare@1
+    displayName: 'Prepare SonarCloud Analysis'
+    inputs:
+      SonarCloud: 'SonarCloud'  # Nom du service de connexion à configurer dans Project Settings > Service connections
+      organization: '$(SONAR_ORGANIZATION)'
+      scannerMode: '$(SONAR_SCANNER_MODE)'
+      projectKey: '$(SONAR_PROJECT_KEY)'
+      projectName: 'bizca'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore NuGet packages'
+    inputs:
+      command: 'restore'
+      projects: '**/*.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build solution'
+    inputs:
+      command: 'build'
+      projects: '**/*.csproj'
+      arguments: '--no-restore --configuration $(buildConfiguration)'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run Tests'
+    inputs:
+      command: 'test'
+      projects: '**/*Tests.csproj'
+      arguments: '--no-restore --configuration $(buildConfiguration) --collect:"XPlat Code Coverage"'
+      publishTestResults: true
+
+  - task: SonarCloudAnalyze@1
+    displayName: 'Run SonarCloud Analysis'
+
+  - task: SonarCloudPublish@1
+    displayName: 'Publish SonarCloud Results'
+    inputs:
+      pollingTimeoutSec: '300'
