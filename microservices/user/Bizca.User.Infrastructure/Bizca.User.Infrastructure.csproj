@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ProjectGuid>{3DABDDD2-AF4D-4A13-9E8D-8DE81949F753}</ProjectGuid>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Bizca.User.Domain\Bizca.User.Domain.csproj" />
+  </ItemGroup>
+</Project>

@@ -2,7 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdk", "sdk", "{531AF015-A311-4274-8942-FDD3711EA54B}"
 	ProjectSection(SolutionItems) = preProject
-		sdk\Directory.Build.props = sdk\Directory.Build.props
 		sdk\Directory.Packages.props = sdk\Directory.Packages.props
 		sdk\README.md = sdk\README.md
 	EndProjectSection
@@ -11,31 +10,39 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "microservices", "microservi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "user", "user", "{675752C8-6495-4F01-A467-1D3C267311AB}"
 	ProjectSection(SolutionItems) = preProject
-		microservices\user\Directory.Build.props = microservices\user\Directory.Build.props
 		microservices\user\Directory.Packages.props = microservices\user\Directory.Packages.props
 		microservices\user\README.md = microservices\user\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "notification", "notification", "{775693D5-D5DA-4E29-8BC2-B2516A6E3010}"
 	ProjectSection(SolutionItems) = preProject
-		microservices\notification\Directory.Build.props = microservices\notification\Directory.Build.props
 		microservices\notification\Directory.Packages.props = microservices\notification\Directory.Packages.props
 		microservices\notification\README.md = microservices\notification\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "order", "order", "{D9DA084B-A79A-440A-BBE9-BFCCBC80ECB9}"
 	ProjectSection(SolutionItems) = preProject
-		microservices\order\Directory.Build.props = microservices\order\Directory.Build.props
 		microservices\order\Directory.Packages.props = microservices\order\Directory.Packages.props
 		microservices\order\README.md = microservices\order\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gateway", "gateway", "{9BD88865-CE44-4E9C-900D-AC3497104E61}"
 	ProjectSection(SolutionItems) = preProject
-		gateway\Directory.Build.props = gateway\Directory.Build.props
 		gateway\Directory.Packages.props = gateway\Directory.Packages.props
 		gateway\README.md = gateway\README.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D07C9104-A99F-4109-AFF8-23353B4109C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{82D552EA-F751-49EB-990D-9D66F90F3F70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bizca.User.Domain", "microservices\user\Bizca.User.Domain\Bizca.User.Domain.csproj", "{817AC879-67B3-4E6F-8074-5899E7990461}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bizca.User.Infrastructure", "microservices\user\Bizca.User.Infrastructure\Bizca.User.Infrastructure.csproj", "{5A628194-71BF-4203-B221-E7E20BEE6E51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bizca.User.Api", "microservices\user\Bizca.User.Api\Bizca.User.Api.csproj", "{DFC791DF-89DE-43EF-904E-45CC8AA4F6BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bizca.User.IntegrationTests", "microservices\user\test\Bizca.User.IntegrationTests\Bizca.User.IntegrationTests.csproj", "{200455D3-7DFF-418C-837D-51731BC357E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,5 +53,29 @@ Global
 		{675752C8-6495-4F01-A467-1D3C267311AB} = {1B42315D-B717-4EEB-8C95-C637E897CCDD}
 		{775693D5-D5DA-4E29-8BC2-B2516A6E3010} = {1B42315D-B717-4EEB-8C95-C637E897CCDD}
 		{D9DA084B-A79A-440A-BBE9-BFCCBC80ECB9} = {1B42315D-B717-4EEB-8C95-C637E897CCDD}
+		{D07C9104-A99F-4109-AFF8-23353B4109C9} = {675752C8-6495-4F01-A467-1D3C267311AB}
+		{82D552EA-F751-49EB-990D-9D66F90F3F70} = {675752C8-6495-4F01-A467-1D3C267311AB}
+		{817AC879-67B3-4E6F-8074-5899E7990461} = {D07C9104-A99F-4109-AFF8-23353B4109C9}
+		{5A628194-71BF-4203-B221-E7E20BEE6E51} = {D07C9104-A99F-4109-AFF8-23353B4109C9}
+		{DFC791DF-89DE-43EF-904E-45CC8AA4F6BA} = {D07C9104-A99F-4109-AFF8-23353B4109C9}
+		{200455D3-7DFF-418C-837D-51731BC357E9} = {82D552EA-F751-49EB-990D-9D66F90F3F70}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{817AC879-67B3-4E6F-8074-5899E7990461}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{817AC879-67B3-4E6F-8074-5899E7990461}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{817AC879-67B3-4E6F-8074-5899E7990461}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{817AC879-67B3-4E6F-8074-5899E7990461}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A628194-71BF-4203-B221-E7E20BEE6E51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A628194-71BF-4203-B221-E7E20BEE6E51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A628194-71BF-4203-B221-E7E20BEE6E51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A628194-71BF-4203-B221-E7E20BEE6E51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFC791DF-89DE-43EF-904E-45CC8AA4F6BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFC791DF-89DE-43EF-904E-45CC8AA4F6BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFC791DF-89DE-43EF-904E-45CC8AA4F6BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFC791DF-89DE-43EF-904E-45CC8AA4F6BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{200455D3-7DFF-418C-837D-51731BC357E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{200455D3-7DFF-418C-837D-51731BC357E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{200455D3-7DFF-418C-837D-51731BC357E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{200455D3-7DFF-418C-837D-51731BC357E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
