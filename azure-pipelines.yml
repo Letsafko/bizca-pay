@@ -4,16 +4,15 @@ trigger:
       - main
       - develop
       - feature/*
+      - feat/*
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 variables:
   buildConfiguration: 'Release'
-  SONAR_SCANNER_MODE: 'MSBuild'
   SONAR_PROJECT_KEY: 'bizca_bizca'
   SONAR_ORGANIZATION: 'bizca'
-  SONAR_HOST_URL: 'https://sonarcloud.io'
 
 steps:
   - task: UseDotNet@2
@@ -21,37 +20,27 @@ steps:
     inputs:
       packageType: 'sdk'
       version: '8.0.x'
-      installationPath: $(Agent.ToolsDirectory)/dotnet
+
+  - checkout: self
+    fetchDepth: 0
 
   - task: SonarCloudPrepare@1
-    displayName: 'Prepare SonarCloud Analysis'
+    displayName: 'Prepare SonarCloud analysis'
     inputs:
-      SonarCloud: 'SonarCloud'  # Nom du service de connexion à configurer dans Project Settings > Service connections
+      SonarCloud: 'SonarCloud'
       organization: '$(SONAR_ORGANIZATION)'
-      scannerMode: '$(SONAR_SCANNER_MODE)'
+      scannerMode: 'MSBuild'
       projectKey: '$(SONAR_PROJECT_KEY)'
       projectName: 'bizca'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Restore NuGet packages'
-    inputs:
-      command: 'restore'
-      projects: 'bizca.sln'
+  - script: |
+      dotnet restore bizca.sln
+      dotnet build bizca.sln --no-restore --configuration $(buildConfiguration)
+    displayName: 'Restore and Build with .sln'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Build solution'
-    inputs:
-      command: 'build'
-      projects: 'bizca.sln'
-      arguments: '--no-restore --configuration $(buildConfiguration)'
-
-  - task: DotNetCoreCLI@2
-    displayName: 'Run Tests'
-    inputs:
-      command: 'test'
-      projects: '**/*Tests.csproj'
-      arguments: '--no-restore --configuration $(buildConfiguration) --collect:"XPlat Code Coverage"'
-      publishTestResults: true
+  - script: |
+      dotnet test bizca.sln --no-build --configuration $(buildConfiguration) --collect:"XPlat Code Coverage"
+    displayName: 'Run Tests with Coverage'
 
   - task: SonarCloudAnalyze@1
     displayName: 'Run SonarCloud Analysis'
