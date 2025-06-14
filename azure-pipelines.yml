@@ -32,11 +32,20 @@ steps:
       scannerMode: 'MSBuild'
       projectKey: '$(SONAR_PROJECT_KEY)'
       projectName: 'bizca'
+      extraProperties: |
+        sonar.cs.vscoveragexml.reportsPaths=**/coverage.cobertura.xml
+      
 
   - script: |
       dotnet restore bizca.sln
       dotnet build bizca.sln --no-restore --configuration $(buildConfiguration)
     displayName: 'Restore and Build with .sln'
+    
+  - script: ls -R
+    displayName: 'Debug file tree after build'
+
+  - script: cat $(System.DefaultWorkingDirectory)/bizca.sln
+    displayName: 'Display solution file content'
 
   - script: |
       dotnet test bizca.sln --no-build --configuration $(buildConfiguration) --collect:"XPlat Code Coverage"
