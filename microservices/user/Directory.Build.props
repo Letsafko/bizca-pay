@@ -1,0 +1,41 @@
+<Project>
+  
+  <PropertyGroup>
+    <Authors>Bizca</Authors>
+    <Company>Bizca</Company>
+    <IsTestProject>$(MSBuildProjectName.Contains("Tests"))</IsTestProject>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsTestProject)' == 'false'">
+    <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  
+  <ItemGroup Label="Test Packages" Condition="'$(IsTestProject)' == 'true'">
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+    <PackageReference Include="AutoFixture" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="FluentAssertions.Analyzers" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq.Contrib.HttpClient" />
+    <PackageReference Include="RichardSzalay.MockHttp" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <Using Include="Xunit"/>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <NoWarn>1591;NU1903</NoWarn>
+  </PropertyGroup>
+
+</Project>
