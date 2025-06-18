@@ -1,12 +1,11 @@
 trigger:
+  batch: true
   branches:
     include:
       - main
       - develop
       - feature/*
-
-pool:
-  vmImage: 'ubuntu-latest'
+      - feat/*
 
 variables:
   buildConfiguration: 'Release'
@@ -16,6 +15,10 @@ variables:
 
 steps:
   - checkout: self
+    persistCredentials: true
+    submodules: true
+    fetchDepth: 0
+    fetchTags: false
 
   - task: UseDotNet@2
     displayName: 'Install .NET SDK'
@@ -31,6 +34,9 @@ steps:
       scannerMode: 'MSBuild'
       projectKey: '$(SONAR_PROJECT_KEY)'
       projectName: 'bizca'
+      extraProperties: |
+        sonar.cs.vscoveragexml.reportsPaths=$(Build.SourcesDirectory)/coverage.xml
+        sonar.exclusions=**/appsettings.Local.json, **/*.razor
 
   - script: |
       dotnet restore bizca.sln
