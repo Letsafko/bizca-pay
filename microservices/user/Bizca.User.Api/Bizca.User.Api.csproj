@@ -1,4 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
+  
+  <PropertyGroup>
+    <ProjectGuid>{A9FC478E-72C0-4631-9599-4075D237EAF4}</ProjectGuid>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
+        
   <ItemGroup>
     <ProjectReference Include="..\Bizca.User.Infrastructure\Bizca.User.Infrastructure.csproj" />
   </ItemGroup>
