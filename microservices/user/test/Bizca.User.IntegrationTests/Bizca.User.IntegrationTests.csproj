@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Bizca.User.Api\Bizca.User.Api.csproj" />
+      <ProjectReference Include="..\..\Bizca.Users.Api\Bizca.Users.Api.csproj" />
     </ItemGroup>
 
 </Project>
