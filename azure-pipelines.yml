@@ -31,7 +31,7 @@ steps:
     inputs:
       SonarCloud: 'SonarCloud'  # doit être configuré dans Project Settings > Service connections
       organization: '$(SONAR_ORGANIZATION)'
-      scannerMode: 'MSBuild'
+      scannerMode: 'dotnet'
       projectKey: '$(SONAR_PROJECT_KEY)'
       projectName: 'bizca'
       extraProperties: |
