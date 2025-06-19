@@ -55,8 +55,10 @@ steps:
 
   - task: SonarCloudAnalyze@1
     displayName: 'Run SonarCloud analysis'
+    inputs:
+      jdkversion: 'JAVA_HOME_17_X64'
 
-  - task: SonarCloudPublish@1
+  - task: SonarCloudPublish@3
     displayName: 'Publish SonarCloud results'
     inputs:
       pollingTimeoutSec: '300'
