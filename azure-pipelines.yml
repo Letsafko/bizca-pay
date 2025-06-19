@@ -1,0 +1,64 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+      - develop
+      - feature/*
+      - feat/*
+
+variables:
+  buildConfiguration: 'Release'
+  SONAR_PROJECT_KEY: 'bizca_bizca'
+  SONAR_ORGANIZATION: 'bizca'
+  DOTNET_VERSION: '9.0.x'
+
+steps:
+  - checkout: self
+    persistCredentials: true
+    submodules: true
+    fetchDepth: 0
+    fetchTags: false
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET SDK'
+    inputs:
+      packageType: 'sdk'
+      version: '$(DOTNET_VERSION)'
+
+  - task: SonarCloudPrepare@3
+    displayName: 'Prepare SonarCloud analysis'
+    inputs:
+      SonarCloud: 'SonarCloud'  # doit être configuré dans Project Settings > Service connections
+      organization: '$(SONAR_ORGANIZATION)'
+      scannerMode: 'dotnet'
+      projectKey: '$(SONAR_PROJECT_KEY)'
+      projectName: 'bizca'
+      extraProperties: |
+        sonar.cs.vscoveragexml.reportsPaths=$(Build.SourcesDirectory)/coverage.xml
+        sonar.exclusions=**/appsettings.Local.json, **/*.razor
+
+  - script: |
+      dotnet restore bizca.sln
+      dotnet build bizca.sln --configuration $(buildConfiguration) --no-incremental --no-restore
+    displayName: 'Build the solution with dotnet build'
+  
+  - script: ls -R
+    displayName: 'Debug file tree after build'
+
+  - script: cat $(System.DefaultWorkingDirectory)/bizca.sln
+    displayName: 'Display solution file content'
+
+  - script: |
+      dotnet test bizca.sln --configuration $(buildConfiguration) --no-build --collect:"XPlat Code Coverage"
+    displayName: 'Run tests'
+
+  - task: SonarCloudAnalyze@3
+    displayName: 'Run SonarCloud analysis'
+    inputs:
+      jdkversion: 'JAVA_HOME_17_X64'
+
+  - task: SonarCloudPublish@3
+    displayName: 'Publish SonarCloud results'
+    inputs:
+      pollingTimeoutSec: '300'
