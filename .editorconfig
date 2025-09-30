@@ -228,15 +228,17 @@ csharp_prefer_static_local_function = true:suggestion
 csharp_style_prefer_primary_constructors = true:suggestion
 
 # Specific diagnostics that help entity classes stay clean and immutable-friendly
-dotnet_diagnostic.IDE0044.severity = suggestion   # Make field readonly
-dotnet_diagnostic.IDE0060.severity = suggestion   # Remove unused parameters
-dotnet_diagnostic.CA1062.severity = warning       # Validate arguments of public methods
-dotnet_diagnostic.CA1822.severity = suggestion    # Mark members as static
-dotnet_diagnostic.CA1707.severity = none          # Underscores in test names not flagged
-dotnet_diagnostic.IDE0051.severity = none         # Remove unused private members (can be noisy with EF)
-dotnet_diagnostic.CS1591.severity = none          # Suppress missing XML docs for publicly visible members
-dotnet_diagnostic.CA1062.severity = none       # Validate arguments of public methods
+dotnet_diagnostic.IDE0044.severity = suggestion # Make field readonly
+dotnet_diagnostic.IDE0060.severity = suggestion # Remove unused parameters
+dotnet_diagnostic.CA1062.severity = warning # Validate arguments of public methods
+dotnet_diagnostic.CA1822.severity = suggestion # Mark members as static
+dotnet_diagnostic.CA1707.severity = none # Underscores in test names not flagged
+dotnet_diagnostic.IDE0051.severity = none # Remove unused private members (can be noisy with EF)
+dotnet_diagnostic.CS1591.severity = none # Suppress missing XML docs for publicly visible members
+dotnet_diagnostic.CA1062.severity = none # Validate arguments of public methods
 dotnet_diagnostic.CA2007.severity = none
+dotnet_diagnostic.CA1819.severity = none
 dotnet_diagnostic.IDE0058.severity = none
+
 
 

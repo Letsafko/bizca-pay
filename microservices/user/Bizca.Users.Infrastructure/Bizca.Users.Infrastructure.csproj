@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<ProjectGuid>{3DABDDD2-AF4D-4A13-9E8D-8DE81949F753}</ProjectGuid>
+	</PropertyGroup>
+
+	<ItemGroup Label="Microsoft">
+		<PackageReference Include="Microsoft.EntityFrameworkCore"/>
+		<PackageReference Include="Microsoft.Extensions.Logging.Console"/>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational"/>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design"/>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"/>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Bizca.Users.Domain\Bizca.Users.Domain.csproj"/>
+	</ItemGroup>
+</Project>
