@@ -12,6 +12,8 @@
 		<AnalysisMode>All</AnalysisMode>
 		<LangVersion>latest</LangVersion>
 		<IsTestProject>$([System.String]::Copy('$(MSBuildProjectName)').Contains('Tests'))</IsTestProject>
+		<RepositoryUrl>https://github.com/Letsafko/Bizca</RepositoryUrl>
+		<NoWarn>S4035;CA2225;CA1812;S3459;CS0649;IDE0032</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsTestProject)' == 'false'">
@@ -39,6 +41,7 @@
 
 	<ItemGroup Condition="'$(IsTestProject)' == 'true'">
 		<PackageReference Include="Microsoft.Extensions.TimeProvider.Testing"/>
+		<PackageReference Include="Bogus"/>
 		<PackageReference Include="AutoFixture"/>
 		<PackageReference Include="RichardSzalay.MockHttp"/>
 		<PackageReference Include="FluentAssertions"/>

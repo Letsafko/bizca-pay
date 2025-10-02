@@ -1,0 +1,58 @@
+﻿# https://redocly.com/docs/cli/rules/
+
+extends:
+  - minimal
+
+resolve:
+  http:
+    headers:
+      - matches: /*
+        name: X-Client-Id
+        enVariable: CLIENT_ID
+      - matches: /*
+        name: X-Client-Secret
+        enVariable: CLIENT_SECRET
+
+rules:
+  boolean-parameter-prefixes:
+    severity: error
+    prefixes: ['should', 'is', 'has']
+  info-contact: off
+  info-license-url: off
+  info-license: off
+  no-ambiguous-paths: error
+  no-empty-servers: error
+  no-enum-type-mismatch: error
+  no-example-value-and-externalValue: error
+  no-http-verbs-in-paths: error
+  no-identical-paths: error
+  no-invalid-media-type-examples:
+    severity: error
+    allowAdditionalProperties: true
+  no-invalid-parameter-examples:
+    severity: error
+    allowAdditionalProperties: false
+  no-path-trailing-slash: error
+  no-server-example.com: error
+  no-server-trailing-slash: error
+  no-undefined-server-variable: error
+  no-unresolved-refs: error
+  no-unused-components: error
+  operation-2xx-response: error
+  operation-description: error
+  operation-operationId-unique: error
+  operation-operationId-url-safe: error
+  operation-operationId: error
+  operation-parameters-unique: error
+  operation-singular-tag: off
+  operation-summary: error
+  operation-tag-defined: off #error
+  parameter-description: error
+  path-declaration-must-exist: error
+  path-not-include-query: error
+  path-parameters-defined: error
+  paths-kebab-case: error
+  security-defined: error
+  spec: error
+  tag-description: error
+  tags-alphabetical: error

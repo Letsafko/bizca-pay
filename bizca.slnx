@@ -1,0 +1,38 @@
+﻿<Solution>
+  <Folder Name="/gateway/">
+    <File Path="gateway\README.md" />
+  </Folder>
+  <Folder Name="/microservices/" />
+  <Folder Name="/microservices/notification/">
+    <File Path="microservices\notification\README.md" />
+  </Folder>
+  <Folder Name="/microservices/order/">
+    <File Path="microservices\order\README.md" />
+  </Folder>
+  <Folder Name="/microservices/user/">
+    <File Path="microservices\user\README.md" />
+  </Folder>
+  <Folder Name="/microservices/user/src/">
+    <Project Path="microservices\user\Bizca.Users.Api\Bizca.Users.Api.csproj" Type="Classic C#" />
+    <Project Path="microservices\user\Bizca.Users.Domain\Bizca.Users.Domain.csproj" Type="Classic C#" />
+    <Project Path="microservices\user\Bizca.Users.Infrastructure\Bizca.Users.Infrastructure.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/microservices/user/test/">
+    <Project Path="microservices\user\test\Bizca.User.IntegrationTests\Bizca.User.IntegrationTests.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/sdk/">
+    <Project Path="sdk\Bizca.Sdk.SharedKernel\Bizca.Sdk.SharedKernel.csproj" Type="Classic C#" />
+    <File Path="sdk\README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="commitlint.config.js" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="gitversion.yml" />
+    <File Path=".redocly.yaml" />
+    <File Path=".spectral.yaml" />
+    <File Path="docker-compose.yaml" />
+  </Folder>
+</Solution>

@@ -1,0 +1,10 @@
+#!/bin/sh
+# Husky v10+ safe prepare-commit-msg hook
+
+# If windows environment, ignore. Developer can still run git cz on its own
+case `uname` in
+    *CYGWIN*|*MINGW*|*MSYS*) exit 0;;
+esac
+
+
+exec < /dev/tty && git cz --hook || true
