@@ -3,4 +3,8 @@
   <PropertyGroup>
     <ProjectGuid>{499FE920-D318-41E9-B6FF-CCA0F1C0695A}</ProjectGuid>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\sdk\Bizca.Sdk.SharedKernel\Bizca.Sdk.SharedKernel.csproj" />
+  </ItemGroup>
 </Project>
