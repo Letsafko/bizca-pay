@@ -1,24 +1,104 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bizca.Users.Domain.Users;
+using Bizca.Users.Domain.Users.Models;
+using Bizca.Users.Domain.Users.ValueObjects;
+using Bizca.Users.Infrastructure.Context.Extensions;
+using Bizca.Users.Infrastructure.Context.ReferentialData;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Bizca.Users.Infrastructure.Context.Configurations;
 
-public class UserEntityConfiguration : IEntityTypeConfiguration<Entities.User>
+internal sealed class UserEntityConfiguration : IEntityTypeConfiguration<User>
 {
-	public void Configure(EntityTypeBuilder<Entities.User> builder)
+	public void Configure(EntityTypeBuilder<User> builder)
 	{
-		builder.HasKey(e => e.UserId).HasName("pk_user");
+		builder.ToTable("user", "usr");
+		builder.HasKey(static entity => entity.Id).HasName(Constants.PkUser);
+		builder
+			.Property(static x => x.Id)
+			.ValueGeneratedOnAdd()
+			.HasValueGenerator<IntValueObjectValueGenerator<UserId>>()
+			.ToIntValueObjectConverter(Constants.UserIdColumnName);
 
-		builder.Property(e => e.CreationDate).HasDefaultValueSql("(getdate())");
-		builder.Property(e => e.LastUpdate).HasDefaultValueSql("(getdate())");
-		builder.Property(e => e.RowVersion).IsRowVersion().IsConcurrencyToken();
+		builder.Property(static e => e.ExternalUserId)
+				.HasConversion(static x => x.Value, static x => ExternalUserId.Create(x).Value)
+				.HasMaxLength(40).HasColumnName("externalUserId");
 
-		builder.HasOne(d => d.BirthCountry).WithMany(p => p.Users).HasConstraintName("fk_user_birthCountryId");
+		builder.Property(static e => e.Civility)
+				.HasConversion(static x => (int)x, static x => (Civility)x)
+				.HasColumnName("civilityId");
 
-		builder.HasOne(d => d.Civility).WithMany(p => p.Users).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_user_civilityId");
+		builder.Property(static e => e.Status)
+				.HasConversion(static x => (int)x, static x => (Status)x)
+				.HasColumnName("statusId");
 
-		builder.HasOne(d => d.EconomicActivity).WithMany(p => p.Users).HasConstraintName("fk_user_economicActivityId");
+		builder.Property(static e => e.Active).HasColumnName("active");
 
-		builder.HasOne(d => d.Partner).WithMany(p => p.Users).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_user_partnerId");
+		builder.Property(static e => e.FirstName).HasMaxLength(100).HasColumnName("firstName");
+		builder.Property(static e => e.LastName).HasMaxLength(100).HasColumnName("lastName");
+		builder.Property(static e => e.BirthDate).HasColumnName("birthDate");
+		builder.Property(static e => e.BirthCity).HasMaxLength(100).HasColumnName("birthCity");
+		builder.Property(static e => e.SecurityStamp).HasMaxLength(256).HasColumnName("securityStamp");
+		builder.Property(static e => e.PasswordHash).HasMaxLength(256).HasColumnName("passwordHash");
+		builder.Property(static e => e.BirthCountry).HasMaxLength(100).HasColumnName("birthCountry");
+		builder
+			.AddVersionAsShadowProperty()
+			.AddAuditingProperties()
+			.IgnoreAuditingProperties();
+
+		builder.Property(static e => e.BirthCountryCode)
+				.HasMaxLength(2)
+				.HasConversion(static x => (string?)x, static x => CountryCode.TryCreate(x))
+				.HasColumnName("birthCountryCode");
+
+		builder
+			.HasMany(static x => x.UserChannels)
+			.WithOne()
+			.HasForeignKey(Constants.UserIdColumnName)
+			.IsRequired()
+			.OnDelete(DeleteBehavior.ClientCascade)
+			.HasConstraintName(Constants.FkUserChannel)
+			.Metadata
+			.PrincipalToDependent
+			?.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+		builder
+			.HasOne(static x => x.Address)
+			.WithOne()
+			.HasForeignKey<Address>(Constants.UserIdColumnName)
+			.IsRequired()
+			.OnDelete(DeleteBehavior.ClientCascade)
+			.HasConstraintName(Constants.FkUserAddress)
+			.Metadata.PrincipalToDependent
+			?.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+		builder
+			.HasOne<CivilityRef>()
+			.WithMany()
+			.HasForeignKey(static e => e.Civility)
+			.IsRequired()
+			.HasConstraintName(Constants.FkUserCivility);
+
+		builder
+			.HasOne<StatusRef>()
+			.WithMany()
+			.HasForeignKey(static e => e.Status)
+			.IsRequired()
+			.HasConstraintName(Constants.FkUserStatus);
+
+		builder.HasIndex(static e => e.Civility).HasDatabaseName(Constants.IxUserCivility);
+		builder.HasIndex(static e => e.Status).HasDatabaseName(Constants.IxUserStatus);
+	}
+
+	private static class Constants
+	{
+		internal const string PkUser = "pk_user";
+		internal const string UserIdColumnName = "userId";
+		internal const string FkUserCivility = "fk_user_civilityId";
+		internal const string IxUserCivility = "ix_user_civilityId";
+		internal const string IxUserStatus = "ix_user_statusId";
+		internal const string FkUserChannel = "fk_user_userChannel";
+		internal const string FkUserAddress = "fk_user_address";
+		internal const string FkUserStatus = "fk_user_statusId";
 	}
 }

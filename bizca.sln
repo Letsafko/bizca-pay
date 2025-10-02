@@ -47,8 +47,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
 		gitversion.yml = gitversion.yml
-		qodana.yaml = qodana.yaml
+		.redocly.yaml = .redocly.yaml
+		.spectral.yaml = .spectral.yaml
+		docker-compose.yaml = docker-compose.yaml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bizca.Sdk.SharedKernel", "sdk\Bizca.Sdk.SharedKernel\Bizca.Sdk.SharedKernel.csproj", "{DC783B3F-959F-40A6-ADC7-29D5E2ED9159}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +69,7 @@ Global
 		{5A628194-71BF-4203-B221-E7E20BEE6E51} = {D07C9104-A99F-4109-AFF8-23353B4109C9}
 		{DFC791DF-89DE-43EF-904E-45CC8AA4F6BA} = {D07C9104-A99F-4109-AFF8-23353B4109C9}
 		{200455D3-7DFF-418C-837D-51731BC357E9} = {82D552EA-F751-49EB-990D-9D66F90F3F70}
+		{DC783B3F-959F-40A6-ADC7-29D5E2ED9159} = {531AF015-A311-4274-8942-FDD3711EA54B}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{817AC879-67B3-4E6F-8074-5899E7990461}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -83,5 +88,9 @@ Global
 		{200455D3-7DFF-418C-837D-51731BC357E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{200455D3-7DFF-418C-837D-51731BC357E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{200455D3-7DFF-418C-837D-51731BC357E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC783B3F-959F-40A6-ADC7-29D5E2ED9159}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC783B3F-959F-40A6-ADC7-29D5E2ED9159}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC783B3F-959F-40A6-ADC7-29D5E2ED9159}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC783B3F-959F-40A6-ADC7-29D5E2ED9159}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
