@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Authors>Bizca</Authors>
 		<Company>Bizca</Company>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
@@ -13,7 +13,7 @@
 		<LangVersion>latest</LangVersion>
 		<IsTestProject>$([System.String]::Copy('$(MSBuildProjectName)').Contains('Tests'))</IsTestProject>
 		<RepositoryUrl>https://github.com/Letsafko/Bizca</RepositoryUrl>
-		<NoWarn>S4035;CA2225;CA1812;S3459;CS0649;IDE0032</NoWarn>
+		<NoWarn>S4035;CA2225;CA1812;S3459;CS0649;IDE0032;CA1016;</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsTestProject)' == 'false'">
@@ -32,11 +32,6 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(IsTestProject)' == 'false'">
-		<PackageReference Include="System.Net.Http"/>
-		<PackageReference Include="System.Text.RegularExpressions"/>
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(IsTestProject)' == 'true'">

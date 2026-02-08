@@ -1,0 +1,65 @@
+﻿services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    command: /bin/bash -lc "/opt/mssql/bin/sqlservr"
+    env_file:
+      - .env
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      SA_PASSWORD: ${DB_PASSWORD}
+      MSSQL_TCP_PORT: 1433
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+
+  migrator-user:
+    container_name: ef-migrations-user
+    depends_on:
+      - mssql
+    build:
+      context: ..
+      dockerfile: database-build/Dockerfile
+      args:
+        EF_MIGRATIONS_PROJECT: "microservices/user/src/Bizca.Users.Api/Bizca.Users.Api.csproj"
+        MS_PROJECT_SOURCE_PATH: "microservices/user/src"
+    command: [ "bash", "-lc", "./ef-migrations.sh" ]
+    env_file:
+      - .env
+    environment:
+      SQL_HOST: "mssql"
+      SQL_PORT: 1433
+      EF_MIGRATIONS_PROJECT: "microservices/user/src/Bizca.Users.Infrastructure/Bizca.Users.Infrastructure.csproj"
+      EF_STARTUP_MIGRATIONS_PROJECT: "microservices/user/src/Bizca.Users.Api/Bizca.Users.Api.csproj"
+      CTX_DB: |
+          Bizca.Users.Infrastructure.Context.ApplicationDbContext=${BIZCA_USER_DB_NAME}
+
+  user-web-api:
+    image: bizca-users-api:local
+    depends_on:
+      - migrator-user
+    build:
+      context: ..
+      dockerfile: microservices/user/src/Bizca.Users.Api/Dockerfile
+    ports:
+      - "5001:8080"
+    env_file:
+      - .env
+    environment:
+      ConnectionStrings__Database: "Server=mssql,1433;Database=${BIZCA_USER_DB_NAME};User Id=${DB_USER};Password=${DB_PASSWORD};TrustServerCertificate=True;"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://*:8080"
+
+  seq:
+    image: datalust/seq:2024.3
+    container_name: seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 8081:80
+
+volumes:
+  mssql-data:
+
