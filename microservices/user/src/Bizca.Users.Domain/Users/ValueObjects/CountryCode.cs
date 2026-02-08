@@ -23,14 +23,16 @@ public class CountryCode : ValueObject, IValueObject<CountryCode, string>
 
 	public static Result<CountryCode> Create(string value)
 	{
-		const string invalidCountryCode = "INVALID_COUNTRY_CODE";
 		if(string.IsNullOrWhiteSpace(value))
 		{
+			const string invalidCountryCode = "INVALID_COUNTRY_CODE";
 			return Error.Problem(invalidCountryCode, "Value must not be null, empty or white space");
 		}
 
 		const string invalidCountryCodeLength = "INVALID_COUNTRY_CODE_LENGTH";
-		return value.Length != 2
+		const int countryCodeLength = 2;
+
+		return value.Length != countryCodeLength
 			? Error.Problem(invalidCountryCodeLength, "Country code length != 2")
 			   : new CountryCode(value);
 	}

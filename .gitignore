@@ -471,3 +471,4 @@ Desktop.ini
 .csettings
 
 package-lock.json
+*.env
