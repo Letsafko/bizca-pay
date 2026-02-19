@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -31,6 +32,8 @@ public class ApplicationDbContext : DbContext
 	{
 		base.ConfigureConventions(configurationBuilder);
 		configurationBuilder.Properties<string>().AreUnicode(false);
+		configurationBuilder.Properties<DateTime>().HaveConversion<UtcDateTimeConverter>();
+		configurationBuilder.Properties<DateTime?>().HaveConversion<UtcNullableDateTimeConverter>();
 	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
