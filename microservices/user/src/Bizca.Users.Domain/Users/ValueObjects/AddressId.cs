@@ -12,9 +12,9 @@ public sealed class AddressId : ValueObject, IValueObject<AddressId, int>
 		Value = value;
 	}
 
-	public static implicit operator int(AddressId userId)
+	public static implicit operator int(AddressId addressId)
 	{
-		return userId.Value;
+		return addressId.Value;
 	}
 
 	public static Result<AddressId> Create(int value)

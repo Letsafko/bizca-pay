@@ -14,7 +14,7 @@
   </Folder>
   <Folder Name="/microservices/user/src/">
     <Project Path="microservices\user\src\Bizca.Users.Api\Bizca.Users.Api.csproj" Type="Classic C#" />
-    <Project Path="microservices\user\src\Bizca.Users.Aspire\Bizca.Users.Aspire.csproj" Type="Classic C#" />
+    <Project Path="microservices\user\src\Bizca.Users.AppHost\Bizca.Users.AppHost.csproj" Type="Classic C#" />
     <Project Path="microservices\user\src\Bizca.Users.Domain\Bizca.Users.Domain.csproj" Type="Classic C#" />
     <Project Path="microservices\user\src\Bizca.Users.Infrastructure\Bizca.Users.Infrastructure.csproj" Type="Classic C#" />
   </Folder>
