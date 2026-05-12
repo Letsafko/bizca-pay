@@ -12,7 +12,7 @@ internal sealed class UserEntityConfiguration : IEntityTypeConfiguration<User>
 {
 	public void Configure(EntityTypeBuilder<User> builder)
 	{
-		builder.ToTable("user", "usr");
+		builder.ToTable("user", DatabaseConstants.Schema);
 		builder.HasKey(static entity => entity.Id).HasName(Constants.PkUser);
 		builder
 			.Property(static x => x.Id)

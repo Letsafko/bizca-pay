@@ -10,7 +10,7 @@ internal sealed class UserChannelConfirmationEntityConfiguration : IEntityTypeCo
 {
 	public void Configure(EntityTypeBuilder<UserChannelConfirmation> builder)
 	{
-		builder.ToTable("userChannelConfirmation", "usr");
+		builder.ToTable("userChannelConfirmation", DatabaseConstants.Schema);
 		builder.HasKey(static e => e.Id).HasName(Constants.PkChannelConfirmation);
 		builder
 			.Property(static x => x.Id)

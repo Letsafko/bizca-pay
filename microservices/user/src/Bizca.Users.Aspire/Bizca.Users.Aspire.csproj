@@ -6,7 +6,8 @@
     </PropertyGroup>
 
 		<ItemGroup>
-			<PackageReference Include="Aspire.Hosting.PostgreSQL" />
+			<PackageReference Include="Aspire.Hosting.SqlServer" />
+			<PackageReference Include="CommunityToolkit.Aspire.Hosting.SqlServer.Extensions" />
 		</ItemGroup>
 
     <ItemGroup>

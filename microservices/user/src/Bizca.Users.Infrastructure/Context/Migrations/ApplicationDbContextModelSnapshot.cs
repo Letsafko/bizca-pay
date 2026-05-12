@@ -3,8 +3,8 @@ using System;
 using Bizca.Users.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -18,71 +18,69 @@ namespace Bizca.Users.Infrastructure.Context.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .UseCollation("French_CI_AI")
-                .HasAnnotation("ProductVersion", "9.0.9")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "10.0.3")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Bizca.Users.Domain.Users.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("addressId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("city");
 
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("country");
 
                     b.Property<string>("CountryCode")
                         .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)")
+                        .HasColumnType("character varying(2)")
                         .HasColumnName("countryCode");
 
                     b.Property<DateTimeOffset>("CreatedDatetime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("createdOn")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("createdOn");
 
                     b.Property<DateTimeOffset>("LastModifiedDatetime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("lastModified")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("lastModified");
 
                     b.Property<string>("Street")
                         .HasMaxLength(255)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("street");
 
                     b.Property<string>("Zipcode")
                         .HasMaxLength(10)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(10)")
+                        .HasColumnType("character varying(10)")
                         .HasColumnName("zipcode");
 
                     b.Property<int>("userId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id")
                         .HasName("pk_address");
 
                     b.HasIndex("userId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_address_user_id");
 
                     b.ToTable("address", "usr");
                 });
@@ -91,30 +89,30 @@ namespace Bizca.Users.Infrastructure.Context.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("userId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Active")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasColumnName("active");
 
                     b.Property<string>("BirthCity")
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("birthCity");
 
                     b.Property<string>("BirthCountry")
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("birthCountry");
 
                     b.Property<string>("BirthCountryCode")
                         .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)")
+                        .HasColumnType("character varying(2)")
                         .HasColumnName("birthCountryCode");
 
                     b.Property<DateOnly?>("BirthDate")
@@ -122,61 +120,57 @@ namespace Bizca.Users.Infrastructure.Context.Migrations
                         .HasColumnName("birthDate");
 
                     b.Property<int>("Civility")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("civilityId");
 
                     b.Property<DateTimeOffset>("CreatedDatetime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("createdOn")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("createdOn");
 
                     b.Property<Guid>("ExternalUserId")
                         .HasMaxLength(40)
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("externalUserId");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("firstName");
 
                     b.Property<DateTimeOffset>("LastModifiedDatetime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("lastModified")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("lastModified");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("lastName");
 
                     b.Property<string>("PasswordHash")
                         .HasMaxLength(256)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(256)")
+                        .HasColumnType("character varying(256)")
                         .HasColumnName("passwordHash");
 
                     b.Property<string>("SecurityStamp")
                         .HasMaxLength(256)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(256)")
+                        .HasColumnType("character varying(256)")
                         .HasColumnName("securityStamp");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("statusId");
 
                     b.Property<byte[]>("Version")
                         .IsConcurrencyToken()
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion")
+                        .HasColumnType("bytea")
                         .HasColumnName("version");
 
                     b.HasKey("Id")
@@ -195,39 +189,36 @@ namespace Bizca.Users.Infrastructure.Context.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("userChannelId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ChannelTypeId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("channelTypeId");
 
                     b.Property<string>("ChannelValue")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("channelValue");
 
                     b.Property<bool>("Confirmed")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasColumnName("confirmed");
 
                     b.Property<DateTimeOffset>("CreatedDatetime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("createdOn")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("createdOn");
 
                     b.Property<DateTimeOffset>("LastModifiedDatetime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("lastModified")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("lastModified");
 
                     b.Property<int>("userId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id")
                         .HasName("pk_userChannel");
@@ -235,7 +226,8 @@ namespace Bizca.Users.Infrastructure.Context.Migrations
                     b.HasIndex("ChannelTypeId")
                         .HasDatabaseName("ix_userChannel_channelTypeId");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("userId")
+                        .HasDatabaseName("ix_user_channel_user_id");
 
                     b.ToTable("userChannel", "usr");
                 });
@@ -244,35 +236,35 @@ namespace Bizca.Users.Infrastructure.Context.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("userChannelConfirmationId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ConfirmationCode")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("confirmationCode");
 
                     b.Property<DateTimeOffset>("CreatedDatetime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("createdOn")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("createdOn");
 
                     b.Property<DateTimeOffset>("ExpirationDatetime")
-                        .HasColumnType("datetimeoffset")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("expirationDate");
 
                     b.Property<int>("userChannelId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_channel_id");
 
                     b.HasKey("Id")
                         .HasName("pk_channelConfirmation");
 
-                    b.HasIndex("userChannelId");
+                    b.HasIndex("userChannelId")
+                        .HasDatabaseName("ix_user_channel_confirmation_user_channel_id");
 
                     b.ToTable("userChannelConfirmation", "usr");
                 });
@@ -280,21 +272,21 @@ namespace Bizca.Users.Infrastructure.Context.Migrations
             modelBuilder.Entity("Bizca.Users.Infrastructure.Context.ReferentialData.ChannelTypeRef", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("channelTypeId");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("description");
 
                     b.Property<string>("Label")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("label");
 
                     b.HasKey("Id")
@@ -305,42 +297,48 @@ namespace Bizca.Users.Infrastructure.Context.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Description = "SMS",
-                            Label = "SMS"
+                            Id = 0,
+                            Description = "None",
+                            Label = "None"
                         },
                         new
                         {
-                            Id = 3,
-                            Description = "Email",
-                            Label = "Email"
+                            Id = 1,
+                            Description = "Sms",
+                            Label = "Sms"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Whatsapp",
                             Label = "Whatsapp"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Email",
+                            Label = "Email"
                         });
                 });
 
             modelBuilder.Entity("Bizca.Users.Infrastructure.Context.ReferentialData.CivilityRef", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("civilityId");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("description");
 
                     b.Property<string>("Label")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("label");
 
                     b.HasKey("Id")
@@ -349,6 +347,12 @@ namespace Bizca.Users.Infrastructure.Context.Migrations
                     b.ToTable("civility", "usr");
 
                     b.HasData(
+                        new
+                        {
+                            Id = 0,
+                            Description = "None",
+                            Label = "None"
+                        },
                         new
                         {
                             Id = 1,
@@ -372,21 +376,21 @@ namespace Bizca.Users.Infrastructure.Context.Migrations
             modelBuilder.Entity("Bizca.Users.Infrastructure.Context.ReferentialData.StatusRef", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("statusId");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("description");
 
                     b.Property<string>("Label")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("label");
 
                     b.HasKey("Id")
@@ -395,6 +399,12 @@ namespace Bizca.Users.Infrastructure.Context.Migrations
                     b.ToTable("status", "usr");
 
                     b.HasData(
+                        new
+                        {
+                            Id = 0,
+                            Description = "None",
+                            Label = "None"
+                        },
                         new
                         {
                             Id = 1,

@@ -1,4 +1,6 @@
-﻿using Bizca.Users.Domain.Users.Models;
+﻿using System;
+using System.Linq;
+using Bizca.Users.Domain.Users.Models;
 using Bizca.Users.Infrastructure.Context.ReferentialData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,7 +11,7 @@ internal sealed class ChannelTypeRefEntityConfiguration : IEntityTypeConfigurati
 {
 	public void Configure(EntityTypeBuilder<ChannelTypeRef> builder)
 	{
-		builder.ToTable("channelType", "usr");
+		builder.ToTable("channelType", DatabaseConstants.Schema);
 		builder.HasKey(static e => e.Id).HasName(Constants.PkChannelTypeRef);
 		builder
 			.Property(static x => x.Id)
@@ -18,12 +20,11 @@ internal sealed class ChannelTypeRefEntityConfiguration : IEntityTypeConfigurati
 
 		builder.Property(static e => e.Label).HasMaxLength(50).HasColumnName("label");
 		builder.Property(static e => e.Description).HasMaxLength(50).HasColumnName("description");
-		builder.HasData
-			(
-				new ChannelTypeRef { Id = ChannelType.Sms, Label = "SMS", Description = "SMS" },
-				new ChannelTypeRef { Id = ChannelType.Email, Label = "Email", Description = "Email" },
-				new ChannelTypeRef { Id = ChannelType.Whatsapp, Label = "Whatsapp", Description = "Whatsapp" }
-			);
+
+		var enums = Enum.GetValues<ChannelType>()
+			.Select(e => new ChannelTypeRef { Id = e, Label = e.ToString(), Description = e.ToString() })
+			.ToArray();
+		builder.HasData(enums);
 	}
 
 	private static class Constants

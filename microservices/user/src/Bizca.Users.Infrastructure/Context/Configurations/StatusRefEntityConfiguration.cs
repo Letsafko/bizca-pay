@@ -1,4 +1,6 @@
-﻿using Bizca.Users.Domain.Users.Models;
+﻿using System;
+using System.Linq;
+using Bizca.Users.Domain.Users.Models;
 using Bizca.Users.Infrastructure.Context.ReferentialData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,7 +11,7 @@ internal sealed class StatusRefEntityConfiguration : IEntityTypeConfiguration<St
 {
 	public void Configure(EntityTypeBuilder<StatusRef> builder)
 	{
-		builder.ToTable("status", "usr");
+		builder.ToTable("status", DatabaseConstants.Schema);
 		builder.HasKey(static e => e.Id).HasName(Constants.PkStatusRef);
 		builder
 			.Property(static x => x.Id)
@@ -18,13 +20,12 @@ internal sealed class StatusRefEntityConfiguration : IEntityTypeConfiguration<St
 
 		builder.Property(static e => e.Label).HasMaxLength(50).HasColumnName("label");
 		builder.Property(static e => e.Description).HasMaxLength(50).HasColumnName("description");
-		builder.HasData
-			(
-				new StatusRef { Id = Status.Draft, Label = "Draft", Description = "Draft" },
-				new StatusRef { Id = Status.KycPending, Label = "KycPending", Description = "KycPending" },
-				new StatusRef { Id = Status.KycVerified, Label = "KycVerified", Description = "KycVerified" },
-				new StatusRef { Id = Status.Active, Label = "Active", Description = "Active" }
-			);
+
+		var enums = Enum.GetValues<Status>()
+			.Select(e => new StatusRef { Id = e, Label = e.ToString(), Description = e.ToString() })
+			.ToArray();
+
+		builder.HasData(enums);
 	}
 
 	private static class Constants

@@ -12,7 +12,7 @@ internal sealed class UserChannelEntityConfiguration : IEntityTypeConfiguration<
 {
 	public void Configure(EntityTypeBuilder<UserChannel> builder)
 	{
-		builder.ToTable("userChannel", "usr");
+		builder.ToTable("userChannel", DatabaseConstants.Schema);
 		builder.HasKey(static e => e.Id).HasName(Constants.PkUserChannel);
 		builder
 			.Property(static x => x.Id)
