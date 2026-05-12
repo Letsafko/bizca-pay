@@ -8,7 +8,6 @@ namespace Bizca.Users.Infrastructure.Context.Extensions;
 internal static class EntityTypeConfigurationExtensions
 {
 	private const string VersionColumnName = "version";
-	private const string DefaultDateSql = "(getdate())";
 	private const string CreatedDateColumnName = "createdOn";
 	private const string LastModifiedDateColumnName = "lastModified";
 
@@ -20,8 +19,8 @@ internal static class EntityTypeConfigurationExtensions
 
 	internal static EntityTypeBuilder<T> AddAuditingProperties<T>(this EntityTypeBuilder<T> builder) where T : Entity
 	{
-		builder.Property(static e => e.CreatedDatetime).HasColumnName(CreatedDateColumnName).HasDefaultValueSql(DefaultDateSql);
-		builder.Property(static e => e.LastModifiedDatetime).HasColumnName(LastModifiedDateColumnName).HasDefaultValueSql(DefaultDateSql);
+		builder.Property(static e => e.CreatedDatetime).HasColumnName(CreatedDateColumnName);
+		builder.Property(static e => e.LastModifiedDatetime).HasColumnName(LastModifiedDateColumnName);
 		return builder;
 	}
 

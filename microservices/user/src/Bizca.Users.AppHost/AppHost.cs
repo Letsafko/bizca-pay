@@ -3,16 +3,17 @@ using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var sqlPassword = builder.AddParameter("sql-password", secret: false);
+var postgres = builder
+	.AddPostgres("postgres")
+	.WithDataVolume("postgres-data")
+	.WithPgWeb();
 
-var database = builder
-	.AddSqlServer("sqlserver", password: sqlPassword, port: 1433)
-	.WithDataVolume("mssql-data")
-	.WithDbGate()
-	.AddDatabase("database", "bizca-users");
+const string databaseName = "bizca-users";
+const string resourceName = "database";
+var database	= postgres.AddDatabase(resourceName, databaseName);
 
 builder.AddProject<Bizca_Users_Api>("api")
-	.WithReference(database)
+	.WithReference(database, connectionName: resourceName)
 	.WaitFor(database);
 
 await builder.Build().RunAsync();

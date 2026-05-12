@@ -10,7 +10,7 @@ internal sealed class AddressEntityConfiguration : IEntityTypeConfiguration<Addr
 {
 	public void Configure(EntityTypeBuilder<Address> builder)
 	{
-		builder.ToTable("address", "usr");
+		builder.ToTable("address", DatabaseConstants.Schema);
 		builder.HasKey(static entity => entity.Id).HasName(Constants.PkAddress);
 		builder
 				.Property(static x => x.Id)

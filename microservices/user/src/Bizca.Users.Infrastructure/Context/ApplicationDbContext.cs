@@ -6,8 +6,6 @@ namespace Bizca.Users.Infrastructure.Context;
 
 public class ApplicationDbContext : DbContext
 {
-	private static readonly ILoggerFactory StaticLoggerFactory = LoggerFactory.Create(static builder => builder.AddConsole());
-
 	public ApplicationDbContext()
 	{
 	}
@@ -15,18 +13,6 @@ public class ApplicationDbContext : DbContext
 	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
 	{
 	}
-
-#if DEBUG
-	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-	{
-		base.OnConfiguring(optionsBuilder);
-		optionsBuilder
-			.EnableDetailedErrors()
-			.UseLoggerFactory(StaticLoggerFactory)
-			.EnableSensitiveDataLogging()
-			.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-	}
-#endif
 
 	protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
 	{
