@@ -2,12 +2,12 @@
 
 namespace Bizca.Sdk.SharedKernel;
 
-public abstract class DomainEvent(DateTime creationDateUtc, Guid correlationId)
+public abstract class DomainEvent(DateTimeOffset creationDateUtc, Guid correlationId)
 {
-	protected DomainEvent(DateTime creationDateUtc) : this(creationDateUtc, Guid.NewGuid())
+	protected DomainEvent(DateTimeOffset creationDateUtc) : this(creationDateUtc, Guid.NewGuid())
 	{
 	}
 
-	public DateTime CreationDateUtc { get; } = creationDateUtc;
+	public DateTimeOffset CreationDateUtc { get; } = creationDateUtc;
 	public Guid CorrelationId { get; } = correlationId;
 }

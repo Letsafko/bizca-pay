@@ -6,10 +6,10 @@ namespace Bizca.Users.Infrastructure.Context.Extensions;
 
 internal static class PropertyBuilderConfigurationExtensions
 {
-	internal static void ToIntValueObjectConverter<T>(this PropertyBuilder<T> builder, string columName) where T : IValueObject<T, int>
+	internal static void ToIntValueObjectConverter<T>(this PropertyBuilder<T> builder, string columnName) where T : IValueObject<T, int>
 	{
 		builder
 			.HasConversion<IntValueObjectConverter<T>>()
-			.HasColumnName(columName);
+			.HasColumnName(columnName);
 	}
 }

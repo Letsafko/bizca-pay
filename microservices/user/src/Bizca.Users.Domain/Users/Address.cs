@@ -8,10 +8,10 @@ public sealed class Address : Entity<AddressId>
 {
 	private Address(
 		CountryCode? countryCode,
-		string? city,
+		string city,
 		string? zipcode,
 		string? street,
-		string? country,
+		string country,
 		DateTimeOffset createdDatetime,
 		DateTimeOffset lastModifiedDatetime) : base(createdDatetime, lastModifiedDatetime)
 	{
@@ -24,18 +24,18 @@ public sealed class Address : Entity<AddressId>
 
 	public static Address Create(
 		CountryCode? countryCode,
-		string? city,
+		string city,
 		string? zipcode,
 		string? street,
-		string? country,
+		string country,
 		DateTimeOffset creationDate)
 	{
 		return new Address(countryCode, city, zipcode, street, country, creationDate, creationDate);
 	}
 
-	public string? City { get; private set; }
+	public string City { get; private set; }
 	public string? Zipcode { get; private set; }
 	public string? Street { get; private set; }
-	public string? Country { get; private set; }
+	public string Country { get; private set; }
 	public CountryCode? CountryCode { get; }
 }

@@ -4,7 +4,7 @@ namespace Bizca.Sdk.SharedKernel;
 
 public class Result
 {
-	protected bool IsSuccess { get; }
+	public bool IsSuccess { get; }
 
 	public Error Error { get; }
 

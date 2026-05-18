@@ -25,12 +25,6 @@ public class ApplicationDbContext : DbContext
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.UseCollation("French_CI_AI");
-		modelBuilder.ApplyConfiguration(new Configurations.ChannelTypeRefEntityConfiguration());
-		modelBuilder.ApplyConfiguration(new Configurations.CivilityRefEntityConfiguration());
-		modelBuilder.ApplyConfiguration(new Configurations.StatusRefEntityConfiguration());
-		modelBuilder.ApplyConfiguration(new Configurations.AddressEntityConfiguration());
-		modelBuilder.ApplyConfiguration(new Configurations.UserChannelConfirmationEntityConfiguration());
-		modelBuilder.ApplyConfiguration(new Configurations.UserChannelEntityConfiguration());
-		modelBuilder.ApplyConfiguration(new Configurations.UserEntityConfiguration());
+		modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 	}
 }

@@ -6,7 +6,7 @@ using Bizca.Users.Domain.Users.ValueObjects;
 
 namespace Bizca.Users.Domain.Users;
 
-public class User : Entity<UserId>, IVersionedEntity
+public sealed class User : Entity<UserId>, IVersionedEntity
 {
 	private User(
 		ExternalUserId externalUserId,
