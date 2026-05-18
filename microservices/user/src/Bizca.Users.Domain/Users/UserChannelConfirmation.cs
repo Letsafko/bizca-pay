@@ -4,7 +4,7 @@ using Bizca.Users.Domain.Users.ValueObjects;
 
 namespace Bizca.Users.Domain.Users;
 
-public class UserChannelConfirmation : Entity<UserChannelConfirmationId>
+public sealed class UserChannelConfirmation : Entity<UserChannelConfirmationId>
 {
 	private UserChannelConfirmation(
 		string confirmationCode,

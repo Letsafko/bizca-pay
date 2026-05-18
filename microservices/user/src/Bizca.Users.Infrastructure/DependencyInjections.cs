@@ -3,7 +3,6 @@ using Bizca.Users.Infrastructure.Context;
 using Bizca.Users.Infrastructure.Context.Options;
 using Bizca.Users.Infrastructure.Time;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -12,9 +11,7 @@ namespace Bizca.Users.Infrastructure;
 
 public static class DependencyInjections
 {
-	private static readonly ILoggerFactory StaticLoggerFactory = LoggerFactory.Create(static builder => builder.AddConsole());
-
-	public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+	public static void AddInfrastructure(this IServiceCollection services)
 	{
 		services.ConfigureOptions<DatabaseOptionsSetup>();
 		services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
@@ -32,11 +29,12 @@ public static class DependencyInjections
 				npgsqlOptions.CommandTimeout(databaseOptions.CommandTimeout);
 			});
 
+			var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
 			options.EnableSensitiveDataLogging(databaseOptions.EnableSensitiveDataLogging);
 			options.EnableDetailedErrors(databaseOptions.EnableDetailedErrors);
 			options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-			options.UseLoggerFactory(StaticLoggerFactory);
-			options.UseSnakeCaseNamingConvention();
+			options.UseLoggerFactory(loggerFactory);
+			options.UseCamelCaseNamingConvention();
 		});
 	}
 }

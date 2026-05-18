@@ -6,7 +6,7 @@ using Bizca.Users.Domain.Users.ValueObjects;
 
 namespace Bizca.Users.Domain.Users;
 
-public class UserChannel : Entity<UserChannelId>
+public sealed class UserChannel : Entity<UserChannelId>
 {
 	public ChannelValue ChannelValue { get; private set; }
 	public ChannelType ChannelTypeId { get; private set; }

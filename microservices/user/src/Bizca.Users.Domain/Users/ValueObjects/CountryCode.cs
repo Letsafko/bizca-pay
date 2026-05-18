@@ -3,7 +3,7 @@ using Bizca.Sdk.SharedKernel;
 
 namespace Bizca.Users.Domain.Users.ValueObjects;
 
-public class CountryCode : ValueObject, IValueObject<CountryCode, string>
+public sealed class CountryCode : ValueObject, IValueObject<CountryCode, string>
 {
 	public string Value { get; }
 	private CountryCode(string value)

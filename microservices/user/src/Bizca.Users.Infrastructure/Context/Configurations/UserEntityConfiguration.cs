@@ -66,7 +66,6 @@ internal sealed class UserEntityConfiguration : IEntityTypeConfiguration<User>
 			.HasOne(static x => x.Address)
 			.WithOne()
 			.HasForeignKey<Address>(Constants.UserIdColumnName)
-			.IsRequired()
 			.OnDelete(DeleteBehavior.ClientCascade)
 			.HasConstraintName(Constants.FkUserAddress)
 			.Metadata.PrincipalToDependent

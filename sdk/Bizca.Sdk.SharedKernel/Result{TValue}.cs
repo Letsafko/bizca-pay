@@ -15,7 +15,7 @@ public sealed class Result<TValue> : Result
 
 	public static implicit operator Result<TValue>(TValue value)
 	{
-		return value is not null ? Success(value) : Failure<TValue>(Error.None);
+		return value is not null ? Success(value) : Failure<TValue>(Error.NullValue);
 	}
 
 	public static implicit operator Result<TValue>(Error error)
