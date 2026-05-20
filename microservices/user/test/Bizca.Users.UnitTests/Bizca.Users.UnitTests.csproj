@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Bizca.Users.Domain\Bizca.Users.Domain.csproj" />
+  </ItemGroup>
+</Project>
+
