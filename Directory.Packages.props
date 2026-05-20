@@ -4,11 +4,16 @@
 	</PropertyGroup>
 
 	<ItemGroup Label="Microsoft">
+		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3"/>
 		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3"/>
 		<PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0"/>
 		<PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.3"/>
 		<PackageVersion Include="EFCore.NamingConventions" Version="10.0.1" />
 		<PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.1.2" />
+	</ItemGroup>
+
+	<ItemGroup Label="OpenApi">
+		<PackageVersion Include="Scalar.AspNetCore" Version="2.6.0"/>
 	</ItemGroup>
 
 	<ItemGroup>
