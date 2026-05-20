@@ -13,7 +13,9 @@
 </ItemGroup>
 
 <ItemGroup Label="OpenApi">
-<PackageVersion Include="Scalar.AspNetCore" Version="2.6.0"/>
+  <PackageVersion Include="Scalar.AspNetCore" Version="2.6.0"/>
+  <PackageVersion Include="Asp.Versioning.Http" Version="10.0.0"/>
+  <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.3"/>
 </ItemGroup>
 
 <ItemGroup>

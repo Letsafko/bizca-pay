@@ -6,8 +6,21 @@
     <UserSecretsId>bizca.user.secrets</UserSecretsId>
   </PropertyGroup>
 
+  <!-- Build-time OpenAPI spec generation → artifacts/openapi/ -->
+  <PropertyGroup>
+    <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
+    <OpenApiDocumentsDirectory>$(MSBuildThisFileDirectory)artifacts/openapi</OpenApiDocumentsDirectory>
+  </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\sdk\Bizca.Sdk.OpenApi\Bizca.Sdk.OpenApi.csproj" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\sdk\Api\Api.csproj" />
     <ProjectReference Include="..\Bizca.Users.Infrastructure\Bizca.Users.Infrastructure.csproj" />
   </ItemGroup>
 

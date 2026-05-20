@@ -1,4 +1,4 @@
-using Bizca.Sdk.OpenApi;
+using Bizca.Sdk.Api.OpenApi;
 using Bizca.Users.Api.Extensions;
 using Bizca.Users.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -12,10 +12,8 @@ var app = builder.Build();
 
 if(app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Local"))
 {
-await app.ApplyMigrationsAsync();
-app.UseBizcaOpenApi();
+	await app.ApplyMigrationsAsync();
+	app.UseBizcaOpenApi();
 }
-
-app.MapGet("/", static () => "Hello World!");
 
 await app.RunAsync();
