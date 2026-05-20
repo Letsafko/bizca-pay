@@ -13,4 +13,3 @@ internal sealed class OpenApiOptionsSetup(IConfiguration configuration)
 		configuration.GetSection(SectionName).Bind(options);
 	}
 }
-
