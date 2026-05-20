@@ -9,496 +9,495 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Bizca.Users.Infrastructure.Context.Migrations
+namespace Bizca.Users.Infrastructure.Context.Migrations;
+
+[DbContext(typeof(ApplicationDbContext))]
+[Migration("20260516075035_Address_City_Country_NotNull")]
+partial class Address_City_Country_NotNull
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260516075035_Address_City_Country_NotNull")]
-    partial class Address_City_Country_NotNull
-    {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
-#pragma warning disable 612, 618
-            modelBuilder
-                .UseCollation("French_CI_AI")
-                .HasAnnotation("ProductVersion", "10.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Bizca.Users.Domain.Users.Address", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("addressId");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("city");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("country");
-
-                    b.Property<string>("CountryCode")
-                        .HasMaxLength(2)
-                        .HasColumnType("character varying(2)")
-                        .HasColumnName("countryCode");
-
-                    b.Property<DateTimeOffset>("CreatedDatetime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("createdOn");
-
-                    b.Property<DateTimeOffset>("LastModifiedDatetime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("lastModified");
-
-                    b.Property<string>("Street")
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("street");
-
-                    b.Property<string>("Zipcode")
-                        .HasMaxLength(10)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(10)")
-                        .HasColumnName("zipcode");
-
-                    b.Property<int?>("userId")
-                        .HasColumnType("integer")
-                        .HasColumnName("userId");
-
-                    b.HasKey("Id")
-                        .HasName("pk_address");
-
-                    b.HasIndex("userId")
-                        .IsUnique()
-                        .HasDatabaseName("iX_address_userId");
-
-                    b.ToTable("address", "usr");
-                });
-
-            modelBuilder.Entity("Bizca.Users.Domain.Users.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("userId");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean")
-                        .HasColumnName("active");
-
-                    b.Property<string>("BirthCity")
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("birthCity");
-
-                    b.Property<string>("BirthCountry")
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("birthCountry");
-
-                    b.Property<string>("BirthCountryCode")
-                        .HasMaxLength(2)
-                        .HasColumnType("character varying(2)")
-                        .HasColumnName("birthCountryCode");
-
-                    b.Property<DateOnly?>("BirthDate")
-                        .HasColumnType("date")
-                        .HasColumnName("birthDate");
-
-                    b.Property<int>("Civility")
-                        .HasColumnType("integer")
-                        .HasColumnName("civilityId");
-
-                    b.Property<DateTimeOffset>("CreatedDatetime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("createdOn");
-
-                    b.Property<Guid>("ExternalUserId")
-                        .HasMaxLength(40)
-                        .HasColumnType("uuid")
-                        .HasColumnName("externalUserId");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("firstName");
-
-                    b.Property<DateTimeOffset>("LastModifiedDatetime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("lastModified");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("lastName");
-
-                    b.Property<string>("PasswordHash")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(256)")
-                        .HasColumnName("passwordHash");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasMaxLength(256)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(256)")
-                        .HasColumnName("securityStamp");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer")
-                        .HasColumnName("statusId");
-
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("bytea")
-                        .HasColumnName("version");
-
-                    b.HasKey("Id")
-                        .HasName("pk_user");
-
-                    b.HasIndex("Civility")
-                        .HasDatabaseName("ix_user_civilityId");
-
-                    b.HasIndex("Status")
-                        .HasDatabaseName("ix_user_statusId");
-
-                    b.ToTable("user", "usr");
-                });
-
-            modelBuilder.Entity("Bizca.Users.Domain.Users.UserChannel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("userChannelId");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ChannelTypeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("channelTypeId");
-
-                    b.Property<string>("ChannelValue")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("channelValue");
-
-                    b.Property<bool>("Confirmed")
-                        .HasColumnType("boolean")
-                        .HasColumnName("confirmed");
-
-                    b.Property<DateTimeOffset>("CreatedDatetime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("createdOn");
-
-                    b.Property<DateTimeOffset>("LastModifiedDatetime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("lastModified");
-
-                    b.Property<int>("userId")
-                        .HasColumnType("integer")
-                        .HasColumnName("userId");
-
-                    b.HasKey("Id")
-                        .HasName("pk_userChannel");
-
-                    b.HasIndex("ChannelTypeId")
-                        .HasDatabaseName("ix_userChannel_channelTypeId");
-
-                    b.HasIndex("userId")
-                        .HasDatabaseName("iX_userChannel_userId");
-
-                    b.ToTable("userChannel", "usr");
-                });
-
-            modelBuilder.Entity("Bizca.Users.Domain.Users.UserChannelConfirmation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("userChannelConfirmationId");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ConfirmationCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("confirmationCode");
-
-                    b.Property<DateTimeOffset>("CreatedDatetime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("createdOn");
-
-                    b.Property<DateTimeOffset>("ExpirationDatetime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("expirationDate");
-
-                    b.Property<int>("userChannelId")
-                        .HasColumnType("integer")
-                        .HasColumnName("userChannelId");
-
-                    b.HasKey("Id")
-                        .HasName("pk_channelConfirmation");
-
-                    b.HasIndex("userChannelId")
-                        .HasDatabaseName("iX_userChannelConfirmation_userChannelId");
-
-                    b.ToTable("userChannelConfirmation", "usr");
-                });
-
-            modelBuilder.Entity("Bizca.Users.Infrastructure.Context.ReferentialData.ChannelTypeRef", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer")
-                        .HasColumnName("channelTypeId");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Label")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("label");
-
-                    b.HasKey("Id")
-                        .HasName("pk_channelType_ref");
-
-                    b.ToTable("channelType", "usr");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 0,
-                            Description = "None",
-                            Label = "None"
-                        },
-                        new
-                        {
-                            Id = 1,
-                            Description = "Sms",
-                            Label = "Sms"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Whatsapp",
-                            Label = "Whatsapp"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Email",
-                            Label = "Email"
-                        });
-                });
-
-            modelBuilder.Entity("Bizca.Users.Infrastructure.Context.ReferentialData.CivilityRef", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer")
-                        .HasColumnName("civilityId");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Label")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("label");
-
-                    b.HasKey("Id")
-                        .HasName("pk_civility_ref");
-
-                    b.ToTable("civility", "usr");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 0,
-                            Description = "None",
-                            Label = "None"
-                        },
-                        new
-                        {
-                            Id = 1,
-                            Description = "Mr",
-                            Label = "Mr"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Ms",
-                            Label = "Ms"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Other",
-                            Label = "Other"
-                        });
-                });
-
-            modelBuilder.Entity("Bizca.Users.Infrastructure.Context.ReferentialData.StatusRef", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer")
-                        .HasColumnName("statusId");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Label")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("label");
-
-                    b.HasKey("Id")
-                        .HasName("pk_status_ref");
-
-                    b.ToTable("status", "usr");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 0,
-                            Description = "None",
-                            Label = "None"
-                        },
-                        new
-                        {
-                            Id = 1,
-                            Description = "Draft",
-                            Label = "Draft"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "KycPending",
-                            Label = "KycPending"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "KycVerified",
-                            Label = "KycVerified"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Description = "Active",
-                            Label = "Active"
-                        });
-                });
-
-            modelBuilder.Entity("Bizca.Users.Domain.Users.Address", b =>
-                {
-                    b.HasOne("Bizca.Users.Domain.Users.User", null)
-                        .WithOne("Address")
-                        .HasForeignKey("Bizca.Users.Domain.Users.Address", "userId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .HasConstraintName("fk_user_address");
-                });
-
-            modelBuilder.Entity("Bizca.Users.Domain.Users.User", b =>
-                {
-                    b.HasOne("Bizca.Users.Infrastructure.Context.ReferentialData.CivilityRef", null)
-                        .WithMany()
-                        .HasForeignKey("Civility")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_civilityId");
-
-                    b.HasOne("Bizca.Users.Infrastructure.Context.ReferentialData.StatusRef", null)
-                        .WithMany()
-                        .HasForeignKey("Status")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_statusId");
-                });
-
-            modelBuilder.Entity("Bizca.Users.Domain.Users.UserChannel", b =>
-                {
-                    b.HasOne("Bizca.Users.Infrastructure.Context.ReferentialData.ChannelTypeRef", null)
-                        .WithMany()
-                        .HasForeignKey("ChannelTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_userChannel_channelTypeId");
-
-                    b.HasOne("Bizca.Users.Domain.Users.User", null)
-                        .WithMany("UserChannels")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_userChannel");
-                });
-
-            modelBuilder.Entity("Bizca.Users.Domain.Users.UserChannelConfirmation", b =>
-                {
-                    b.HasOne("Bizca.Users.Domain.Users.UserChannel", null)
-                        .WithMany("UserChannelConfirmations")
-                        .HasForeignKey("userChannelId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_userChannel_userChannelConfirmation");
-                });
-
-            modelBuilder.Entity("Bizca.Users.Domain.Users.User", b =>
-                {
-                    b.Navigation("Address");
-
-                    b.Navigation("UserChannels");
-                });
-
-            modelBuilder.Entity("Bizca.Users.Domain.Users.UserChannel", b =>
-                {
-                    b.Navigation("UserChannelConfirmations");
-                });
-#pragma warning restore 612, 618
-        }
-    }
+	/// <inheritdoc />
+	protected override void BuildTargetModel(ModelBuilder modelBuilder)
+	{
+		#pragma warning disable 612, 618
+		modelBuilder
+			.UseCollation("French_CI_AI")
+			.HasAnnotation("ProductVersion", "10.0.3")
+			.HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+		NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+		modelBuilder.Entity("Bizca.Users.Domain.Users.Address", b =>
+		{
+			b.Property<int>("Id")
+			.ValueGeneratedOnAdd()
+			.HasColumnType("integer")
+			.HasColumnName("addressId");
+
+			NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+			b.Property<string>("City")
+			.IsRequired()
+			.HasMaxLength(100)
+			.IsUnicode(false)
+			.HasColumnType("character varying(100)")
+			.HasColumnName("city");
+
+			b.Property<string>("Country")
+			.IsRequired()
+			.HasMaxLength(100)
+			.IsUnicode(false)
+			.HasColumnType("character varying(100)")
+			.HasColumnName("country");
+
+			b.Property<string>("CountryCode")
+			.HasMaxLength(2)
+			.HasColumnType("character varying(2)")
+			.HasColumnName("countryCode");
+
+			b.Property<DateTimeOffset>("CreatedDatetime")
+			.HasColumnType("timestamp with time zone")
+			.HasColumnName("createdOn");
+
+			b.Property<DateTimeOffset>("LastModifiedDatetime")
+			.HasColumnType("timestamp with time zone")
+			.HasColumnName("lastModified");
+
+			b.Property<string>("Street")
+			.HasMaxLength(255)
+			.IsUnicode(false)
+			.HasColumnType("character varying(255)")
+			.HasColumnName("street");
+
+			b.Property<string>("Zipcode")
+			.HasMaxLength(10)
+			.IsUnicode(false)
+			.HasColumnType("character varying(10)")
+			.HasColumnName("zipcode");
+
+			b.Property<int?>("userId")
+			.HasColumnType("integer")
+			.HasColumnName("userId");
+
+			b.HasKey("Id")
+			.HasName("pk_address");
+
+			b.HasIndex("userId")
+			.IsUnique()
+			.HasDatabaseName("iX_address_userId");
+
+			b.ToTable("address", "usr");
+		});
+
+		modelBuilder.Entity("Bizca.Users.Domain.Users.User", b =>
+		{
+			b.Property<int>("Id")
+			.ValueGeneratedOnAdd()
+			.HasColumnType("integer")
+			.HasColumnName("userId");
+
+			NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+			b.Property<bool>("Active")
+			.HasColumnType("boolean")
+			.HasColumnName("active");
+
+			b.Property<string>("BirthCity")
+			.HasMaxLength(100)
+			.IsUnicode(false)
+			.HasColumnType("character varying(100)")
+			.HasColumnName("birthCity");
+
+			b.Property<string>("BirthCountry")
+			.HasMaxLength(100)
+			.IsUnicode(false)
+			.HasColumnType("character varying(100)")
+			.HasColumnName("birthCountry");
+
+			b.Property<string>("BirthCountryCode")
+			.HasMaxLength(2)
+			.HasColumnType("character varying(2)")
+			.HasColumnName("birthCountryCode");
+
+			b.Property<DateOnly?>("BirthDate")
+			.HasColumnType("date")
+			.HasColumnName("birthDate");
+
+			b.Property<int>("Civility")
+			.HasColumnType("integer")
+			.HasColumnName("civilityId");
+
+			b.Property<DateTimeOffset>("CreatedDatetime")
+			.HasColumnType("timestamp with time zone")
+			.HasColumnName("createdOn");
+
+			b.Property<Guid>("ExternalUserId")
+			.HasMaxLength(40)
+			.HasColumnType("uuid")
+			.HasColumnName("externalUserId");
+
+			b.Property<string>("FirstName")
+			.IsRequired()
+			.HasMaxLength(100)
+			.IsUnicode(false)
+			.HasColumnType("character varying(100)")
+			.HasColumnName("firstName");
+
+			b.Property<DateTimeOffset>("LastModifiedDatetime")
+			.HasColumnType("timestamp with time zone")
+			.HasColumnName("lastModified");
+
+			b.Property<string>("LastName")
+			.IsRequired()
+			.HasMaxLength(100)
+			.IsUnicode(false)
+			.HasColumnType("character varying(100)")
+			.HasColumnName("lastName");
+
+			b.Property<string>("PasswordHash")
+			.HasMaxLength(256)
+			.IsUnicode(false)
+			.HasColumnType("character varying(256)")
+			.HasColumnName("passwordHash");
+
+			b.Property<string>("SecurityStamp")
+			.HasMaxLength(256)
+			.IsUnicode(false)
+			.HasColumnType("character varying(256)")
+			.HasColumnName("securityStamp");
+
+			b.Property<int>("Status")
+			.HasColumnType("integer")
+			.HasColumnName("statusId");
+
+			b.Property<byte[]>("Version")
+			.IsConcurrencyToken()
+			.IsRequired()
+			.ValueGeneratedOnAddOrUpdate()
+			.HasColumnType("bytea")
+			.HasColumnName("version");
+
+			b.HasKey("Id")
+			.HasName("pk_user");
+
+			b.HasIndex("Civility")
+			.HasDatabaseName("ix_user_civilityId");
+
+			b.HasIndex("Status")
+			.HasDatabaseName("ix_user_statusId");
+
+			b.ToTable("user", "usr");
+		});
+
+		modelBuilder.Entity("Bizca.Users.Domain.Users.UserChannel", b =>
+		{
+			b.Property<int>("Id")
+			.ValueGeneratedOnAdd()
+			.HasColumnType("integer")
+			.HasColumnName("userChannelId");
+
+			NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+			b.Property<int>("ChannelTypeId")
+			.HasColumnType("integer")
+			.HasColumnName("channelTypeId");
+
+			b.Property<string>("ChannelValue")
+			.IsRequired()
+			.HasMaxLength(100)
+			.HasColumnType("character varying(100)")
+			.HasColumnName("channelValue");
+
+			b.Property<bool>("Confirmed")
+			.HasColumnType("boolean")
+			.HasColumnName("confirmed");
+
+			b.Property<DateTimeOffset>("CreatedDatetime")
+			.HasColumnType("timestamp with time zone")
+			.HasColumnName("createdOn");
+
+			b.Property<DateTimeOffset>("LastModifiedDatetime")
+			.HasColumnType("timestamp with time zone")
+			.HasColumnName("lastModified");
+
+			b.Property<int>("userId")
+			.HasColumnType("integer")
+			.HasColumnName("userId");
+
+			b.HasKey("Id")
+			.HasName("pk_userChannel");
+
+			b.HasIndex("ChannelTypeId")
+			.HasDatabaseName("ix_userChannel_channelTypeId");
+
+			b.HasIndex("userId")
+			.HasDatabaseName("iX_userChannel_userId");
+
+			b.ToTable("userChannel", "usr");
+		});
+
+		modelBuilder.Entity("Bizca.Users.Domain.Users.UserChannelConfirmation", b =>
+		{
+			b.Property<int>("Id")
+			.ValueGeneratedOnAdd()
+			.HasColumnType("integer")
+			.HasColumnName("userChannelConfirmationId");
+
+			NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+			b.Property<string>("ConfirmationCode")
+			.IsRequired()
+			.HasMaxLength(50)
+			.IsUnicode(false)
+			.HasColumnType("character varying(50)")
+			.HasColumnName("confirmationCode");
+
+			b.Property<DateTimeOffset>("CreatedDatetime")
+			.HasColumnType("timestamp with time zone")
+			.HasColumnName("createdOn");
+
+			b.Property<DateTimeOffset>("ExpirationDatetime")
+			.HasColumnType("timestamp with time zone")
+			.HasColumnName("expirationDate");
+
+			b.Property<int>("userChannelId")
+			.HasColumnType("integer")
+			.HasColumnName("userChannelId");
+
+			b.HasKey("Id")
+			.HasName("pk_channelConfirmation");
+
+			b.HasIndex("userChannelId")
+			.HasDatabaseName("iX_userChannelConfirmation_userChannelId");
+
+			b.ToTable("userChannelConfirmation", "usr");
+		});
+
+		modelBuilder.Entity("Bizca.Users.Infrastructure.Context.ReferentialData.ChannelTypeRef", b =>
+		{
+			b.Property<int>("Id")
+			.HasColumnType("integer")
+			.HasColumnName("channelTypeId");
+
+			b.Property<string>("Description")
+			.IsRequired()
+			.HasMaxLength(50)
+			.IsUnicode(false)
+			.HasColumnType("character varying(50)")
+			.HasColumnName("description");
+
+			b.Property<string>("Label")
+			.IsRequired()
+			.HasMaxLength(50)
+			.IsUnicode(false)
+			.HasColumnType("character varying(50)")
+			.HasColumnName("label");
+
+			b.HasKey("Id")
+			.HasName("pk_channelType_ref");
+
+			b.ToTable("channelType", "usr");
+
+			b.HasData(
+				new
+				{
+					Id = 0,
+					Description = "None",
+					Label = "None"
+				},
+				new
+				{
+					Id = 1,
+					Description = "Sms",
+					Label = "Sms"
+				},
+				new
+				{
+					Id = 2,
+					Description = "Whatsapp",
+					Label = "Whatsapp"
+				},
+				new
+				{
+					Id = 3,
+					Description = "Email",
+					Label = "Email"
+				});
+		});
+
+		modelBuilder.Entity("Bizca.Users.Infrastructure.Context.ReferentialData.CivilityRef", b =>
+		{
+			b.Property<int>("Id")
+			.HasColumnType("integer")
+			.HasColumnName("civilityId");
+
+			b.Property<string>("Description")
+			.IsRequired()
+			.HasMaxLength(50)
+			.IsUnicode(false)
+			.HasColumnType("character varying(50)")
+			.HasColumnName("description");
+
+			b.Property<string>("Label")
+			.IsRequired()
+			.HasMaxLength(50)
+			.IsUnicode(false)
+			.HasColumnType("character varying(50)")
+			.HasColumnName("label");
+
+			b.HasKey("Id")
+			.HasName("pk_civility_ref");
+
+			b.ToTable("civility", "usr");
+
+			b.HasData(
+				new
+				{
+					Id = 0,
+					Description = "None",
+					Label = "None"
+				},
+				new
+				{
+					Id = 1,
+					Description = "Mr",
+					Label = "Mr"
+				},
+				new
+				{
+					Id = 2,
+					Description = "Ms",
+					Label = "Ms"
+				},
+				new
+				{
+					Id = 3,
+					Description = "Other",
+					Label = "Other"
+				});
+		});
+
+		modelBuilder.Entity("Bizca.Users.Infrastructure.Context.ReferentialData.StatusRef", b =>
+		{
+			b.Property<int>("Id")
+			.HasColumnType("integer")
+			.HasColumnName("statusId");
+
+			b.Property<string>("Description")
+			.IsRequired()
+			.HasMaxLength(50)
+			.IsUnicode(false)
+			.HasColumnType("character varying(50)")
+			.HasColumnName("description");
+
+			b.Property<string>("Label")
+			.IsRequired()
+			.HasMaxLength(50)
+			.IsUnicode(false)
+			.HasColumnType("character varying(50)")
+			.HasColumnName("label");
+
+			b.HasKey("Id")
+			.HasName("pk_status_ref");
+
+			b.ToTable("status", "usr");
+
+			b.HasData(
+				new
+				{
+					Id = 0,
+					Description = "None",
+					Label = "None"
+				},
+				new
+				{
+					Id = 1,
+					Description = "Draft",
+					Label = "Draft"
+				},
+				new
+				{
+					Id = 2,
+					Description = "KycPending",
+					Label = "KycPending"
+				},
+				new
+				{
+					Id = 4,
+					Description = "KycVerified",
+					Label = "KycVerified"
+				},
+				new
+				{
+					Id = 8,
+					Description = "Active",
+					Label = "Active"
+				});
+		});
+
+		modelBuilder.Entity("Bizca.Users.Domain.Users.Address", b =>
+		{
+			b.HasOne("Bizca.Users.Domain.Users.User", null)
+			.WithOne("Address")
+			.HasForeignKey("Bizca.Users.Domain.Users.Address", "userId")
+			.OnDelete(DeleteBehavior.ClientCascade)
+			.HasConstraintName("fk_user_address");
+		});
+
+		modelBuilder.Entity("Bizca.Users.Domain.Users.User", b =>
+		{
+			b.HasOne("Bizca.Users.Infrastructure.Context.ReferentialData.CivilityRef", null)
+			.WithMany()
+			.HasForeignKey("Civility")
+			.OnDelete(DeleteBehavior.Cascade)
+			.IsRequired()
+			.HasConstraintName("fk_user_civilityId");
+
+			b.HasOne("Bizca.Users.Infrastructure.Context.ReferentialData.StatusRef", null)
+			.WithMany()
+			.HasForeignKey("Status")
+			.OnDelete(DeleteBehavior.Cascade)
+			.IsRequired()
+			.HasConstraintName("fk_user_statusId");
+		});
+
+		modelBuilder.Entity("Bizca.Users.Domain.Users.UserChannel", b =>
+		{
+			b.HasOne("Bizca.Users.Infrastructure.Context.ReferentialData.ChannelTypeRef", null)
+			.WithMany()
+			.HasForeignKey("ChannelTypeId")
+			.OnDelete(DeleteBehavior.Cascade)
+			.IsRequired()
+			.HasConstraintName("fk_userChannel_channelTypeId");
+
+			b.HasOne("Bizca.Users.Domain.Users.User", null)
+			.WithMany("UserChannels")
+			.HasForeignKey("userId")
+			.OnDelete(DeleteBehavior.ClientCascade)
+			.IsRequired()
+			.HasConstraintName("fk_user_userChannel");
+		});
+
+		modelBuilder.Entity("Bizca.Users.Domain.Users.UserChannelConfirmation", b =>
+		{
+			b.HasOne("Bizca.Users.Domain.Users.UserChannel", null)
+			.WithMany("UserChannelConfirmations")
+			.HasForeignKey("userChannelId")
+			.OnDelete(DeleteBehavior.ClientCascade)
+			.IsRequired()
+			.HasConstraintName("fk_userChannel_userChannelConfirmation");
+		});
+
+		modelBuilder.Entity("Bizca.Users.Domain.Users.User", b =>
+		{
+			b.Navigation("Address");
+
+			b.Navigation("UserChannels");
+		});
+
+		modelBuilder.Entity("Bizca.Users.Domain.Users.UserChannel", b =>
+		{
+			b.Navigation("UserChannelConfirmations");
+		});
+		#pragma warning restore 612, 618
+	}
 }
