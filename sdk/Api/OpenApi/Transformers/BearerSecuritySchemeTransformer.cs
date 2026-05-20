@@ -31,7 +31,11 @@ internal sealed class BearerSecuritySchemeTransformer(OpenApiOptions options)
         };
 
         var schemeRef = new OpenApiSecuritySchemeReference(options.BearerSchemeName, document, null);
-        var requirement = new OpenApiSecurityRequirement { [schemeRef] = [] };
+
+        var requirement = new OpenApiSecurityRequirement
+        {
+            [schemeRef] = []
+        };
 
 		foreach (var operation in document.Paths.Values
 										.Where(p => p.Operations is not null)
