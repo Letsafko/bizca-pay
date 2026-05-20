@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.DependencyInjection;
 using Scalar.AspNetCore;
 
-namespace Bizca.Sdk.OpenApi;
+namespace Bizca.Sdk.Extensions.OpenApi;
 
 /// <summary>
 /// Extension methods for configuring OpenAPI in a Bizca service.

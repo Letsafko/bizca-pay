@@ -1,4 +1,4 @@
-using Bizca.Sdk.OpenApi;
+using Bizca.Sdk.Extensions.OpenApi;
 using Bizca.Users.Api.Extensions;
 using Bizca.Users.Infrastructure;
 using Microsoft.AspNetCore.Builder;
