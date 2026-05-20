@@ -12,8 +12,8 @@ var app = builder.Build();
 
 if(app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Local"))
 {
-	await app.ApplyMigrationsAsync();
-	app.UseBizcaOpenApi();
+await app.ApplyMigrationsAsync();
+app.UseBizcaOpenApi();
 }
 
 app.MapGet("/", static () => "Hello World!");

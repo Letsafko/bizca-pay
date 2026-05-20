@@ -1,0 +1,59 @@
+# For GitHub Copilot purpose
+
+## Setup
+
+### Copilot Instructions
+
+Copilot supports creating agent skills using a `.github/skills`
+For more details, refer [Creating agent skills for GitHub Copilot](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-skills).
+
+### Agent Personas (agents.md)
+
+Copilot supports specialized agent personas.
+
+Invoke agents in Copilot Chat:
+- `@code-reviewer Review this PR`
+- `@test-engineer Analyze test coverage for this module`
+- `@security-auditor Check this endpoint for vulnerabilities`
+
+## Recommended Configuration
+
+### .github/copilot-instructions.md
+
+GitHub Copilot supports project-level instructions via `.github/copilot-instructions.md`.
+
+```markdown
+# Project Coding Standards
+
+## Testing
+- Write tests before code (TDD)
+- For bugs: write a failing test first, then fix (Prove-It pattern)
+- Test hierarchy: unit > integration > e2e (use the lowest level that captures the behavior)
+- Run `npm test` after every change
+
+## Code Quality
+- Review across five axes: correctness, readability, architecture, security, performance
+- Every PR must pass: lint, type check, tests, build
+- No secrets in code or version control
+
+## Implementation
+- Build in small, verifiable increments
+- Each increment: implement → test → verify → commit
+- Never mix formatting changes with behavior changes
+
+## Boundaries
+- Always: Run tests before commits, validate user input
+- Ask first: Database schema changes, new dependencies
+- Never: Commit secrets, remove failing tests, skip verification
+```
+
+### Specialized Agents
+
+Use the agents for targeted review workflows in Copilot Chat.
+
+## Usage Tips
+
+1. **Keep instructions concise** — Copilot instructions work best when focused. Summarize the key rules rather than including full skill files.
+2. **Use agents for review** — The code-reviewer, test-engineer, and security-auditor agents are designed for Copilot's agent model.
+3. **Reference in chat** — When working on a specific phase, paste the relevant skill content into Copilot Chat for context.
+4. **Combine with PR reviews** — Set up Copilot to review PRs using the code-reviewer agent persona.
