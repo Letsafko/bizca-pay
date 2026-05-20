@@ -19,6 +19,7 @@
     <Project Path="microservices\user\src\Bizca.Users.Infrastructure\Bizca.Users.Infrastructure.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/microservices/user/test/">
+    <Project Path="microservices\user\test\Bizca.Users.UnitTests\Bizca.Users.UnitTests.csproj" Type="Classic C#" />
     <Project Path="microservices\user\test\Bizca.User.IntegrationTests\Bizca.User.IntegrationTests.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/sdk/">
