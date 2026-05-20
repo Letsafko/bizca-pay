@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Bizca.Sdk.Api</RootNamespace>
+		<AssemblyName>Bizca.Sdk.Api</AssemblyName>
+		<PackageId>Bizca.Sdk.Api</PackageId>
+		<Description>Bizca Sdk Api nuget</Description>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Scalar.AspNetCore" />
+		<PackageReference Include="Asp.Versioning.Http" />
+	</ItemGroup>
+
+</Project>
+
