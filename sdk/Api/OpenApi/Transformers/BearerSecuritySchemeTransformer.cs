@@ -11,7 +11,7 @@ namespace Bizca.Sdk.Api.OpenApi.Transformers;
 /// Adds a Bearer/JWT <see cref="OpenApiSecurityScheme"/> to every OpenAPI document
 /// and applies the global security requirement to all operations.
 /// </summary>
-internal sealed class BearerSecuritySchemeTransformer(BizcaOpenApiOptions options)
+internal sealed class BearerSecuritySchemeTransformer(OpenApiOptions options)
     : IOpenApiDocumentTransformer
 {
     public Task TransformAsync(
