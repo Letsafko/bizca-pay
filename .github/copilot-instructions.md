@@ -107,7 +107,7 @@ using Bizca.Users.Domain.Users.ValueObjects;
 using FluentAssertions;
 using Xunit;
 
-namespace Bizca.User.IntegrationTests.UnitTests.Users.ValueObjects;
+namespace Bizca.Users.UnitTests.Users.ValueObjects;
 
 [Trait("Category", "Unit")]
 public sealed class ChannelValueTests
@@ -130,7 +130,7 @@ public sealed class ChannelValueTests
     {
         var result = ChannelValue.Create(raw);
 
-        result.IsFailure.Should().BeTrue();
+        result.IsSuccess.Should().BeFalse();
         result.Error.Type.Should().Be(ErrorType.Problem);
         result.Error.Code.Should().Be("INVALID_CHANNEL_VALUE");
     }
@@ -143,7 +143,7 @@ using Bizca.Users.Domain.Users.Models;
 using FluentAssertions;
 using Xunit;
 
-namespace Bizca.User.IntegrationTests.UnitTests.Users;
+namespace Bizca.Users.UnitTests.Users;
 
 [Trait("Category", "Unit")]
 public sealed class UserTests
