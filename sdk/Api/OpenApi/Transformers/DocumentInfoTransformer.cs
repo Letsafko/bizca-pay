@@ -8,7 +8,7 @@ namespace Bizca.Sdk.Api.OpenApi.Transformers;
 /// <summary>
 /// Sets the <see cref="OpenApiInfo"/> (title, description, version) on each generated document.
 /// </summary>
-internal sealed class DocumentInfoTransformer(BizcaOpenApiOptions options, string version)
+internal sealed class DocumentInfoTransformer(OpenApiOptions options, string version)
     : IOpenApiDocumentTransformer
 {
     public Task TransformAsync(

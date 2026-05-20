@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructure();
-builder.Services.AddBizcaOpenApi();
+builder.Services.AddBizcaOpenApi(builder.Configuration);
 
 var app = builder.Build();
 

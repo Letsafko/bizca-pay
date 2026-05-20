@@ -11,7 +11,7 @@ namespace Bizca.Sdk.Api.OpenApi.Transformers;
 /// Adds a Bearer/JWT <see cref="OpenApiSecurityScheme"/> to every OpenAPI document
 /// and applies the global security requirement to all operations.
 /// </summary>
-internal sealed class BearerSecuritySchemeTransformer(BizcaOpenApiOptions options)
+internal sealed class BearerSecuritySchemeTransformer(OpenApiOptions options)
     : IOpenApiDocumentTransformer
 {
     public Task TransformAsync(
@@ -31,11 +31,7 @@ internal sealed class BearerSecuritySchemeTransformer(BizcaOpenApiOptions option
         };
 
         var schemeRef = new OpenApiSecuritySchemeReference(options.BearerSchemeName, document, null);
-
-        var requirement = new OpenApiSecurityRequirement
-        {
-            [schemeRef] = []
-        };
+        var requirement = new OpenApiSecurityRequirement { [schemeRef] = [] };
 
 		foreach (var operation in document.Paths.Values
 										.Where(p => p.Operations is not null)
