@@ -78,9 +78,9 @@ function headerFriendlyRule(parsed) {
 
 			Quick examples:
 			  feat: add login page
-			  fix: avoid NRE on startup #BIZ-123
+			  fix: avoid NRE on startup #BP-123
 			  🐛 fix crash when token is null
-			  BIZ-123 fix: correct rounding logic
+			  BP-123 fix: correct rounding logic
 			  WIP: refactor auth flow
 
 			Why it failed:
