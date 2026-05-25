@@ -13,7 +13,7 @@
 		<LangVersion>latest</LangVersion>
 		<IsTestProject>$([System.String]::Copy('$(MSBuildProjectName)').Contains('Tests'))</IsTestProject>
 		<RepositoryUrl>https://github.com/Letsafko/Bizca</RepositoryUrl>
-		<NoWarn>S4035;CA2225;CA1812;S3459;CS0649;IDE0032;CA1016;CA1031;</NoWarn>
+		<NoWarn>S4035;CA2225;CA1812;S3459;CS0649;IDE0032;CA1016;CA1031;CA1515;CA1054;CA1056;CA2234;CA2000;CA1032;CA1848;CA1873;S6667;CA1307;CA1849;</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsTestProject)' == 'false'">

@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<RootNamespace>Bizca.Sdk.SharedKernel</RootNamespace>
+		<AssemblyName>Bizca.Sdk.SharedKernel</AssemblyName>
+		<PackageId>Bizca.Sdk.SharedKernel</PackageId>
+		<Description>Bizca Sdk SharedKernel nuget</Description>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+</Project>
