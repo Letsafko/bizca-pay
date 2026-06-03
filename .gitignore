@@ -472,3 +472,4 @@ Desktop.ini
 
 package-lock.json
 *.env
+*.db

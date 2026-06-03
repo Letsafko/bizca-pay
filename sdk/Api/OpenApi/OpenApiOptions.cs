@@ -5,6 +5,8 @@
 /// </summary>
 public sealed class OpenApiOptions
 {
+	internal const string SectionName = nameof(OpenApiOptions);
+
     /// <summary>Gets or sets the API title shown in the spec and the Scalar UI.</summary>
     public string? Title { get; init; }
 

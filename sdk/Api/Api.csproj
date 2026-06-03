@@ -9,12 +9,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="FluentValidation" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
 		<PackageReference Include="Scalar.AspNetCore" />
 		<PackageReference Include="Asp.Versioning.Http" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
 		<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -7,9 +7,9 @@ Guidance for all AI coding agents (Claude Code, Cursor, GitHub Copilot, etc.) wo
 ## Solution Overview
 
 **Bizca** is a **.NET 10 microservices backend** built with Domain-Driven Design (DDD).
-Active microservice: **Users** (`microservices/user/`).
+Active microservices: **Users** (`microservices/user/`), **OpenID** (`security/Bizca.OpenId.Api/`)
 
-**Stack:** ASP.NET Core Minimal API · EF Core + PostgreSQL · .NET Aspire · xUnit · FluentAssertions · Reqnroll · Testcontainers · Moq · AutoFixture · Bogus
+**Stack:** ASP.NET Core Minimal API · EF Core + PostgreSQL · .NET Aspire · Keycloak · xUnit · FluentAssertions · Reqnroll · Testcontainers · Moq · AutoFixture · Bogus
 
 ### Architecture
 
@@ -25,9 +25,11 @@ Bizca.Sdk.SharedKernel  →  Bizca.Users.Domain  →  Bizca.Users.Infrastructure
 | `Bizca.Users.Domain` | Entities, Value Objects, domain enums, domain events — pure C#, no infrastructure |
 | `Bizca.Users.Infrastructure` | EF Core `ApplicationDbContext`, `IEntityTypeConfiguration<T>`, repositories, options, time provider |
 | `Bizca.Users.Api` | ASP.NET Core Minimal API endpoints, DI wiring (`Program.cs`), startup migration |
-| `Bizca.Users.AppHost` | .NET Aspire orchestration for local development (Postgres + API) |
+| `Bizca.Users.Aspire` | .NET Aspire service defaults for Users microservice |
 | `Bizca.Users.UnitTests` | Unit tests — domain behaviour, Value Objects, entity factories — no DB, no HTTP |
 | `Bizca.User.IntegrationTests` | Integration (Testcontainers) + functional (Reqnroll + WebApplicationFactory) |
+| `Bizca.OpenId.Api` | Authentication microservice — Keycloak integration, token exchange, JWT validation |
+| `Bizca.Services.AppHost` | .NET Aspire orchestration (Keycloak, PostgreSQL, OpenID API, Users API) |
 
 ### Layer Rules
 
@@ -36,6 +38,49 @@ Bizca.Sdk.SharedKernel  →  Bizca.Users.Domain  →  Bizca.Users.Infrastructure
 - API references Infrastructure for DI wiring only.
 - `Bizca.Users.UnitTests` references **Domain only** — never Infrastructure or API.
 - `Bizca.User.IntegrationTests` references API (full stack via `WebApplicationFactory`).
+
+### Unit Test Patterns
+
+Unit tests live in `Bizca.Users.UnitTests/` — domain behaviour only, no DB/HTTP/DI.
+
+**Mandatory category trait on every test class:**
+```csharp
+[Trait("Category", "Unit")]
+public sealed class ChannelValueTests { }
+```
+
+**Naming pattern** — describe behaviour, never implementation:
+```
+[Scenario]_[Condition]_[ExpectedOutcome]
+
+✓ AValidChannelValue_IsAccepted
+✓ ABlankChannelValue_IsRejected_WithAnExplicitErrorCode
+✗ Create_WithValidValue_ReturnsSuccess  // wrong - describes method
+```
+
+**What to test:**
+- Value Object validation → `Result.IsSuccess` / `Result.IsFailure` + correct `ErrorType` + error code
+- Entity creation → observable properties (`Active`, `Status`, `ExternalUserId`)
+- Domain rules → `Result.IsFailure` (never thrown exceptions)
+
+**Test structure:**
+- Use FluentAssertions — never `Assert.Equal`
+- Use `[Theory]` + `[InlineData]` for multiple inputs
+- One concept per test — passing and rejection are separate tests
+- Never assert on `private` fields or internal state
+
+**Example:**
+```csharp
+[Theory]
+[InlineData("alice@example.com")]
+public void AValidChannelValue_IsAccepted(string raw)
+{
+    var result = ChannelValue.Create(raw);
+
+    result.IsSuccess.Should().BeTrue();
+    result.Value.Value.Should().Be(raw);
+}
+```
 
 ---
 
@@ -299,6 +344,61 @@ dotnet list bizca.slnx package --vulnerable --include-transitive  # CVE scan
 | Unit — domain behaviour | `Bizca.Users.UnitTests` | No |
 | Integration — EF Core + real PostgreSQL | `Bizca.User.IntegrationTests` | Yes (Testcontainers) |
 | Functional — HTTP endpoints via Reqnroll | `Bizca.User.IntegrationTests` | Yes (Testcontainers) |
+
+---
+
+## Local Development
+
+### .NET Aspire Orchestration (Recommended)
+
+Run all services (Keycloak + PostgreSQL + OpenID API + Users API) with a single command:
+
+```powershell
+dotnet run --project microservices/Bizca.Services.AppHost/Bizca.Services.AppHost.csproj
+```
+
+**Accesses:**
+- **Aspire Dashboard**: `https://localhost:17000` or `http://localhost:15000` — view all service logs, metrics, endpoints
+- **Keycloak**: `http://localhost:8080` — admin/admin
+- **OpenID API, Users API**: ports shown in Aspire Dashboard (dynamic)
+
+**Prerequisites:**
+- Docker Desktop running
+- .NET Aspire workload: `dotnet workload install aspire`
+
+**Services orchestrated:**
+- Keycloak (authentication server)
+- PostgreSQL (Users database)
+- Bizca.OpenId.Api (token exchange, JWT validation)
+- Bizca.Users.Api (user management)
+
+**Data persistence:**
+- PostgreSQL: anonymous volume (cleared on stop) — prevents corruption in dev
+- Keycloak: bind mount to `./keycloak-data/` — realm configuration persists
+
+### EF Core Migrations
+
+**Create a migration** (from `microservices/user/src/Bizca.Users.Api/`):
+```powershell
+dotnet ef migrations add {MigrationName} `
+  --project ..\Bizca.Users.Infrastructure\Bizca.Users.Infrastructure.csproj `
+  --startup-project .\Bizca.Users.Api.csproj `
+  --context ApplicationDbContext
+```
+
+**Apply migrations** (automatic in Aspire, manual command):
+```powershell
+dotnet ef database update `
+  --project ..\Bizca.Users.Infrastructure\Bizca.Users.Infrastructure.csproj `
+  --startup-project .\Bizca.Users.Api.csproj `
+  --context ApplicationDbContext
+```
+
+**Best practices:**
+- Use PascalCase names: `AddUserEmailColumn`, `CreateOrdersTable`
+- Never remove migrations deployed to shared environments
+- Coordinate with team before rolling back shared database migrations
+- Review generated SQL: `dotnet ef migrations script {from} {to} --output migration.sql`
 
 ---
 

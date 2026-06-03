@@ -1,7 +1,7 @@
 ﻿using Bizca.Sdk.SharedKernel;
+using Bizca.Sdk.SharedKernel.Extensions;
 using Bizca.Users.Infrastructure.Context;
 using Bizca.Users.Infrastructure.Context.Options;
-using Bizca.Users.Infrastructure.Time;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ public static class DependencyInjections
 	public static void AddInfrastructure(this IServiceCollection services)
 	{
 		services.ConfigureOptions<DatabaseOptionsSetup>();
-		services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+		services.AddTimeProvider();
 		services.AddDatabase();
 	}
 	private static void AddDatabase(this IServiceCollection services)

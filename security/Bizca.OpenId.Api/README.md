@@ -332,32 +332,6 @@ curl -X POST http://localhost:5100/auth/logout \
 
 ---
 
-## Testing
-
-**Voir [TESTING.md](./TESTING.md) pour le guide complet de test avec des exemples curl fonctionnels.**
-
-### Test rapide : Client Credentials (le plus simple)
-
-```powershell
-# Récupérer le port de l'OpenID API depuis le Dashboard Aspire (ex: 5306)
-$port = 5306  # Remplacer par le port réel
-
-# Obtenir un token
-$response = Invoke-RestMethod `
-  -Uri "http://localhost:$port/auth/token" `
-  -Method POST `
-  -ContentType "application/json" `
-  -Body '{"grant_type":"client_credentials"}'
-
-# Afficher le token
-Write-Host "Access Token: $($response.access_token)"
-Write-Host "Expires in: $($response.expires_in) seconds"
-```
-
-**Pour les exemples bash/curl et les flows OAuth2 complets, voir [TESTING.md](./TESTING.md).**
-
----
-
 ## Déploiement
 
 ### Docker Compose (développement)

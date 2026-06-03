@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OpenApi;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.OpenApi;
 
 namespace Bizca.Sdk.Api.OpenApi.Transformers;
@@ -24,14 +26,13 @@ internal sealed class BearerSecuritySchemeTransformer(OpenApiOptions options)
 		document.Components.SecuritySchemes[options.BearerSchemeName] = new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.Http,
-            Scheme = "bearer",
+            Scheme = JwtBearerDefaults.AuthenticationScheme,
             BearerFormat = options.BearerFormat,
             In = ParameterLocation.Header,
             Description = $"Provide a valid {options.BearerFormat} token."
         };
 
         var schemeRef = new OpenApiSecuritySchemeReference(options.BearerSchemeName, document, null);
-
         var requirement = new OpenApiSecurityRequirement
         {
             [schemeRef] = []

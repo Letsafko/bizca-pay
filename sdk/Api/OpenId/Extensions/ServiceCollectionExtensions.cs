@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddBizcaOpenId(
         this IServiceCollection services,
-        Action<OpenIdOptions> configureOptions)
+        Action<OpenIdOptions>? configureOptions = null)
     {
         ArgumentNullException.ThrowIfNull(configureOptions);
 

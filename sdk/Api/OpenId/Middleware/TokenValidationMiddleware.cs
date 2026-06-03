@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Bizca.Sdk.Api.OpenId.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Bizca.Sdk.Api.OpenId.Middleware;
 
@@ -42,16 +43,14 @@ public sealed class TokenValidationMiddleware
 
 	public async Task InvokeAsync(HttpContext context)
 	{
-		// Skip validation for health checks and non-protected routes
 		if (context.Request.Path.StartsWithSegments(Constants.Paths.HealthPath) ||
 			context.Request.Path.StartsWithSegments(Constants.Paths.AlternativeHealthPath))
 		{
-			await _next(context).ConfigureAwait(false);
+			await _next(context);
 			return;
 		}
 
 		var token = ExtractBearerToken(context);
-
 		if (string.IsNullOrWhiteSpace(token))
 		{
 			_logger.LogWarning("Missing Authorization header");
@@ -60,13 +59,13 @@ public sealed class TokenValidationMiddleware
 			{
 				error = Constants.ErrorCodes.UnauthorizedError,
 				message = Constants.ErrorMessages.MissingAuthHeaderMessage
-			}).ConfigureAwait(false);
+			});
 			return;
 		}
 
 		try
 		{
-			var configuration = await _configurationManager.GetConfigurationAsync(context.RequestAborted).ConfigureAwait(false);
+			var configuration = await _configurationManager.GetConfigurationAsync(context.RequestAborted);
 
 			var validationParameters = new TokenValidationParameters
 			{
@@ -86,7 +85,7 @@ public sealed class TokenValidationMiddleware
 			context.User = principal;
 			context.Items[Constants.ValidatedTokenKey] = validatedToken;
 
-			await _next(context).ConfigureAwait(false);
+			await _next(context);
 		}
 		catch (SecurityTokenExpiredException)
 		{
@@ -96,7 +95,7 @@ public sealed class TokenValidationMiddleware
 			{
 				error = Constants.ErrorCodes.TokenExpiredError,
 				message = Constants.ErrorMessages.TokenExpiredMessage
-			}).ConfigureAwait(false);
+			});
 		}
 		catch (SecurityTokenException ex)
 		{
@@ -106,7 +105,7 @@ public sealed class TokenValidationMiddleware
 			{
 				error = Constants.ErrorCodes.InvalidTokenError,
 				message = Constants.ErrorMessages.InvalidTokenMessage
-			}).ConfigureAwait(false);
+			});
 		}
 		catch (Exception ex)
 		{
@@ -116,26 +115,25 @@ public sealed class TokenValidationMiddleware
 			{
 				error = Constants.ErrorCodes.ServiceUnavailableError,
 				message = Constants.ErrorMessages.ServiceUnavailableMessage
-			}).ConfigureAwait(false);
+			});
 		}
 	}
 
 	private static string? ExtractBearerToken(HttpContext context)
 	{
 		var authHeader = context.Request.Headers.Authorization.ToString();
-
-		if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith(Constants.BearerScheme, StringComparison.OrdinalIgnoreCase))
+		if (string.IsNullOrWhiteSpace(authHeader) ||
+			!authHeader.StartsWith(JwtBearerDefaults.AuthenticationScheme, StringComparison.OrdinalIgnoreCase))
 		{
 			return null;
 		}
 
-		return authHeader[Constants.BearerScheme.Length..].Trim();
+		return authHeader[JwtBearerDefaults.AuthenticationScheme.Length..].Trim();
 	}
 
 	private static class Constants
 	{
 		public const string ValidatedTokenKey = "ValidatedToken";
-		public const string BearerScheme = "Bearer ";
 		internal static class Paths
 		{
 			internal const string HealthPath = "/health";

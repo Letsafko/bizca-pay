@@ -24,11 +24,15 @@
     <Project Path="microservices\user\test\Bizca.Users.UnitTests\Bizca.Users.UnitTests.csproj" />
   </Folder>
   <Folder Name="/sdk/">
+    <Project Path="sdk\Abstractions\Abstractions.csproj" Type="Classic C#" />
     <Project Path="sdk\Api\Api.csproj" />
     <Project Path="sdk\SharedKernel\SharedKernel.csproj" />
   </Folder>
   <Folder Name="/security/">
     <Project Path="security/Bizca.OpenId.Api/Bizca.OpenId.Api.csproj" />
+    <Project Path="security\Bizca.OpenId.ApiModels\Bizca.OpenId.ApiModels.csproj" Type="Classic C#" />
+    <Project Path="security\Bizca.OpenId.Application\Bizca.OpenId.Application.csproj" Type="Classic C#" />
+    <Project Path="security\Bizca.OpenId.Infrastructure\Bizca.OpenId.Infrastructure.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
