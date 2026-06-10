@@ -7,7 +7,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using Bizca.Sdk.Api.OpenId.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Bizca.Sdk.Api.OpenId.Middleware;
@@ -16,26 +15,26 @@ public sealed class TokenValidationMiddleware
 {
 	private readonly RequestDelegate _next;
 	private readonly ILogger<TokenValidationMiddleware> _logger;
-	private readonly OpenIdOptions _options;
+	private readonly OpenIdOptions _openIdOptions;
 	private readonly ConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
 	private readonly JwtSecurityTokenHandler _tokenHandler = new();
 
 	public TokenValidationMiddleware(
 		RequestDelegate next,
 		ILogger<TokenValidationMiddleware> logger,
-		IOptions<OpenIdOptions> options)
+		IOptions<OpenIdOptions> openIdOptionsAccessor)
 	{
 		_next = next;
 		_logger = logger;
-		_options = options.Value;
+		_openIdOptions = openIdOptionsAccessor.Value;
 
 		var documentRetriever = new HttpDocumentRetriever
 		{
-			RequireHttps = _options.RequireHttpsMetadata
+			RequireHttps = _openIdOptions.RequireHttpsMetadata
 		};
 
 		_configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-			metadataAddress: $"{_options.Authority.TrimEnd('/')}{Constants.Paths.WellKnownConfigPath}",
+			metadataAddress: $"{_openIdOptions.Authority.TrimEnd('/')}{Constants.Paths.WellKnownConfigPath}",
 			configRetriever: new OpenIdConnectConfigurationRetriever(),
 			docRetriever: documentRetriever
 		);
@@ -70,11 +69,11 @@ public sealed class TokenValidationMiddleware
 			var validationParameters = new TokenValidationParameters
 			{
 				ValidateIssuer = true,
-				ValidIssuer = _options.Issuer,
+				ValidIssuer = _openIdOptions.Issuer,
 				ValidateAudience = true,
-				ValidAudience = _options.Audience,
+				ValidAudience = _openIdOptions.Audience,
 				ValidateLifetime = true,
-				ClockSkew = TimeSpan.FromSeconds(_options.ClockSkewSeconds),
+				ClockSkew = TimeSpan.FromSeconds(_openIdOptions.ClockSkewSeconds),
 				IssuerSigningKeys = configuration.SigningKeys,
 				ValidateIssuerSigningKey = true
 			};

@@ -10,8 +10,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\user\src\Bizca.Users.Api\Bizca.Users.Api.csproj" />
-        <ProjectReference Include="..\..\security\Bizca.OpenId.Api\Bizca.OpenId.Api.csproj" />
+      <ProjectReference Include="..\..\security\src\Bizca.OpenId.Server\Bizca.OpenId.Server.csproj" />
+      <ProjectReference Include="..\user\src\Bizca.Users.Api\Bizca.Users.Api.csproj" />
     </ItemGroup>
 
 </Project>

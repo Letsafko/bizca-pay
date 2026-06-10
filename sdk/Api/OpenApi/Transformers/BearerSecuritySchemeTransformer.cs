@@ -26,7 +26,7 @@ internal sealed class BearerSecuritySchemeTransformer(OpenApiOptions options)
 		document.Components.SecuritySchemes[options.BearerSchemeName] = new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.Http,
-            Scheme = JwtBearerDefaults.AuthenticationScheme,
+            Scheme = options.BearerSchemeName,
             BearerFormat = options.BearerFormat,
             In = ParameterLocation.Header,
             Description = $"Provide a valid {options.BearerFormat} token."

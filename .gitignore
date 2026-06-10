@@ -473,3 +473,4 @@ Desktop.ini
 package-lock.json
 *.env
 *.db
+microservices/Bizca.Services.AppHost/keycloak-data

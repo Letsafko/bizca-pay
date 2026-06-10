@@ -1,4 +1,6 @@
-﻿namespace Bizca.Sdk.Api.OpenApi;
+﻿using FluentValidation;
+
+namespace Bizca.Sdk.Api.OpenApi;
 
 /// <summary>
 /// Configuration options for the Bizca OpenAPI layer.
@@ -29,5 +31,27 @@ public sealed class OpenApiOptions
 
     /// <summary>Gets or sets the bearer token format label shown in the spec (e.g. <c>JWT</c>).</summary>
     public string BearerFormat { get; init; } = "JWT";
+}
+
+public sealed class OpenApiOptionsValidator : AbstractValidator<OpenApiOptions>
+{
+	public OpenApiOptionsValidator()
+	{
+		RuleFor(x => x.Versions)
+			.NotEmpty()
+			.WithMessage("{PropertyName} must be specified.");
+
+		RuleForEach(x => x.BearerSchemeName)
+			.NotEmpty()
+			.WithMessage("{PropertyName} must be specified.");
+
+		RuleFor(x => x.BearerFormat)
+			.NotEmpty()
+			.WithMessage("{PropertyName} must be specified.");
+
+		RuleFor(x => x.Title)
+			.NotEmpty()
+			.WithMessage("{PropertyName} must be specified.");
+	}
 }
 

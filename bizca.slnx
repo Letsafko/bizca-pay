@@ -28,11 +28,15 @@
     <Project Path="sdk\Api\Api.csproj" />
     <Project Path="sdk\SharedKernel\SharedKernel.csproj" />
   </Folder>
-  <Folder Name="/security/">
-    <Project Path="security/Bizca.OpenId.Api/Bizca.OpenId.Api.csproj" />
-    <Project Path="security\Bizca.OpenId.ApiModels\Bizca.OpenId.ApiModels.csproj" Type="Classic C#" />
-    <Project Path="security\Bizca.OpenId.Application\Bizca.OpenId.Application.csproj" Type="Classic C#" />
-    <Project Path="security\Bizca.OpenId.Infrastructure\Bizca.OpenId.Infrastructure.csproj" Type="Classic C#" />
+  <Folder Name="/security/" />
+  <Folder Name="/security/src/">
+    <Project Path="security\src\Bizca.OpenId.ApiModels\Bizca.OpenId.ApiModels.csproj" Type="Classic C#" />
+    <Project Path="security\src\Bizca.OpenId.Application\Bizca.OpenId.Application.csproj" Type="Classic C#" />
+    <Project Path="security\src\Bizca.OpenId.Infrastructure\Bizca.OpenId.Infrastructure.csproj" Type="Classic C#" />
+    <Project Path="security\src\Bizca.OpenId.Server\Bizca.OpenId.Server.csproj" />
+  </Folder>
+  <Folder Name="/security/test/">
+    <Project Path="security\test\Bizca.OpenId.IntegrationTests\Bizca.OpenId.IntegrationTests.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />

@@ -16,7 +16,7 @@ public static class LoggingDecorator
 	{
 		public async Task<Result<TResponse>> HandleAsync(TRequest? request, CancellationToken cancellationToken)
 		{
-			var requestName = typeof(TRequest).Name;
+			var requestName = GetNestedTypeName();
 			logger.LogInformation("Processing request {RequestName}", requestName);
 
 			var result = await innerHandler.HandleAsync(request, cancellationToken);
@@ -31,6 +31,11 @@ public static class LoggingDecorator
 			}
 
 			return result;
+		}
+
+		private static string? GetNestedTypeName()
+		{
+			return typeof(TRequest?).FullName?.Split('.')[^1].Replace("+", "");
 		}
 	}
 }

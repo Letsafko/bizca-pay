@@ -5,9 +5,7 @@ namespace Bizca.Sdk.Api.Options;
 
 public static class OptionsExtensions
 {
-	public static IServiceCollection AddOptionsWithValidation<TOptions>(
-		this IServiceCollection services,
-		string sectionName)
+	public static void AddOptionsWithValidation<TOptions>(this IServiceCollection services, string sectionName)
 		where TOptions : class
 	{
 		services
@@ -15,8 +13,6 @@ public static class OptionsExtensions
 			.BindConfiguration(sectionName)
 			.ValidateFluently()
 			.ValidateOnStart();
-
-		return services;
 	}
 
 	public static IServiceCollection AddOptionsWithSetup<TOptions, TSetup>(

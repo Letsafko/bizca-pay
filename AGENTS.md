@@ -7,7 +7,7 @@ Guidance for all AI coding agents (Claude Code, Cursor, GitHub Copilot, etc.) wo
 ## Solution Overview
 
 **Bizca** is a **.NET 10 microservices backend** built with Domain-Driven Design (DDD).
-Active microservices: **Users** (`microservices/user/`), **OpenID** (`security/Bizca.OpenId.Api/`)
+Active microservices: **Users** (`microservices/user/`), **OpenID** (`security/Bizca.OpenId.Server/`)
 
 **Stack:** ASP.NET Core Minimal API · EF Core + PostgreSQL · .NET Aspire · Keycloak · xUnit · FluentAssertions · Reqnroll · Testcontainers · Moq · AutoFixture · Bogus
 
@@ -16,20 +16,25 @@ Active microservices: **Users** (`microservices/user/`), **OpenID** (`security/B
 ```
 Bizca.Sdk.SharedKernel  →  Bizca.Users.Domain  →  Bizca.Users.Infrastructure  →  Bizca.Users.Api
                                                                                          ↑
-                                                                         Bizca.User.IntegrationTests
+                                                                          Bizca.User.IntegrationTests
 ```
 
 | Project | Responsibility |
 |---|---|
 | `Bizca.Sdk.SharedKernel` | Base types: `Entity<TId>`, `ValueObject`, `Result<T>`, `Error`, `DomainEvent`, `IValueObject<T,TRaw>`, `IVersionedEntity` |
+| `Bizca.Sdk.Abstractions` | Pipeline decorators (`ValidationDecorator`, `LoggingDecorator`), `IRequest`, `IRequestHandler` |
+| `Bizca.Sdk.Api` | MinimalApi extensions, OpenAPI/Scalar configuration, OpenID middleware, endpoint mapping |
 | `Bizca.Users.Domain` | Entities, Value Objects, domain enums, domain events — pure C#, no infrastructure |
 | `Bizca.Users.Infrastructure` | EF Core `ApplicationDbContext`, `IEntityTypeConfiguration<T>`, repositories, options, time provider |
 | `Bizca.Users.Api` | ASP.NET Core Minimal API endpoints, DI wiring (`Program.cs`), startup migration |
 | `Bizca.Users.Aspire` | .NET Aspire service defaults for Users microservice |
 | `Bizca.Users.UnitTests` | Unit tests — domain behaviour, Value Objects, entity factories — no DB, no HTTP |
 | `Bizca.User.IntegrationTests` | Integration (Testcontainers) + functional (Reqnroll + WebApplicationFactory) |
-| `Bizca.OpenId.Api` | Authentication microservice — Keycloak integration, token exchange, JWT validation |
-| `Bizca.Services.AppHost` | .NET Aspire orchestration (Keycloak, PostgreSQL, OpenID API, Users API) |
+| `Bizca.OpenId.ApiModels` | Request/Response DTOs for token, refresh, logout endpoints |
+| `Bizca.OpenId.Application` | Use cases (token exchange, refresh, logout), validation, abstractions |
+| `Bizca.OpenId.Infrastructure` | Keycloak HTTP client, JWKS cache, JWT validation, DI registration |
+| `Bizca.OpenId.Server` | Authentication microservice entry point — endpoints, `Program.cs` |
+| `Bizca.Services.AppHost` | .NET Aspire orchestration (Keycloak, PostgreSQL, OpenID Server, Users API) |
 
 ### Layer Rules
 
@@ -351,7 +356,7 @@ dotnet list bizca.slnx package --vulnerable --include-transitive  # CVE scan
 
 ### .NET Aspire Orchestration (Recommended)
 
-Run all services (Keycloak + PostgreSQL + OpenID API + Users API) with a single command:
+Run all services (Keycloak + PostgreSQL + OpenID Server + Users API) with a single command:
 
 ```powershell
 dotnet run --project microservices/Bizca.Services.AppHost/Bizca.Services.AppHost.csproj
@@ -360,16 +365,16 @@ dotnet run --project microservices/Bizca.Services.AppHost/Bizca.Services.AppHost
 **Accesses:**
 - **Aspire Dashboard**: `https://localhost:17000` or `http://localhost:15000` — view all service logs, metrics, endpoints
 - **Keycloak**: `http://localhost:8080` — admin/admin
-- **OpenID API, Users API**: ports shown in Aspire Dashboard (dynamic)
+- **OpenID Server, Users API**: ports shown in Aspire Dashboard (dynamic)
 
 **Prerequisites:**
 - Docker Desktop running
 - .NET Aspire workload: `dotnet workload install aspire`
 
 **Services orchestrated:**
-- Keycloak (authentication server)
-- PostgreSQL (Users database)
-- Bizca.OpenId.Api (token exchange, JWT validation)
+- Keycloak (authentication server, versioned at 25.0.6)
+- PostgreSQL (Users database with PgWeb UI)
+- Bizca.OpenId.Server (token exchange, JWT validation, Keycloak integration)
 - Bizca.Users.Api (user management)
 
 **Data persistence:**
@@ -411,4 +416,3 @@ The following thoughts are traps — ignore them:
 - *"I'll gather context first, then decide if a skill applies"*
 
 Correct behavior: **check the intent → skill table first, every time.**
-

@@ -1,39 +1,36 @@
-﻿using Aspire.Hosting;
+using Aspire.Hosting;
+using Bizca.Services.AppHost.Constants;
 using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Keycloak configuration
 var keycloak = builder
-    .AddContainer("keycloak", "quay.io/keycloak/keycloak", "latest")
-    .WithHttpEndpoint(port: 8080, targetPort: 8080, name: "http")
-    .WithEnvironment("KEYCLOAK_ADMIN", "admin")
-    .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", "admin")
-    .WithArgs("start-dev")
-    .WithBindMount("keycloak-data", "/opt/keycloak/data");
-
-// PostgreSQL database for Users service
-const string databaseName = "bizca-users";
-const string resourceName = "database";
+	.AddContainer(KeycloakConstants.ResourceName, KeycloakConstants.Image, KeycloakConstants.Version)
+	.WithHttpEndpoint(port: KeycloakConstants.Port, targetPort: KeycloakConstants.Port, name: "http")
+	.WithEnvironment("KEYCLOAK_ADMIN", builder.Configuration[ConfigurationKeys.Keycloak.AdminUser] ?? "admin")
+	.WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", builder.Configuration[ConfigurationKeys.Keycloak.AdminPassword] ?? "admin")
+	.WithEnvironment("KC_HEALTH_ENABLED", "true")
+	.WithEnvironment("KC_METRICS_ENABLED", "true")
+	.WithVolume("keycloak-data", "/opt/keycloak/data")
+	.WithArgs("start-dev");
 
 var postgres = builder
-    .AddPostgres("postgres")
+    .AddPostgres(PostgresConstants.ResourceName)
     .WithDataVolume()
-    .WithPgWeb();
+    .WithPgWeb()
+    .WithEnvironment("POSTGRES_INITDB_ARGS", PostgresConstants.InitDbArgs);
 
-var database = postgres.AddDatabase(resourceName, databaseName);
+var database = postgres.AddDatabase(PostgresConstants.DatabaseResourceName, PostgresConstants.DatabaseName);
 
-// OpenID API (authentication service)
 builder
-    .AddProject<Bizca_OpenId_Api>("openid-api")
+    .AddProject<Bizca_OpenId_Server>(ServiceConstants.OpenIdApiName)
+    .WithReplicas(ServiceConstants.DefaultReplicas)
     .WaitFor(keycloak);
 
-// Users API
 builder
-    .AddProject<Bizca_Users_Api>("users-api")
-    .WithReference(database, connectionName: resourceName)
+    .AddProject<Bizca_Users_Api>(ServiceConstants.UsersApiName)
+    .WithReference(database, connectionName: PostgresConstants.DatabaseResourceName)
+    .WithReplicas(ServiceConstants.DefaultReplicas)
     .WaitFor(database);
 
 await builder.Build().RunAsync();
-
-
