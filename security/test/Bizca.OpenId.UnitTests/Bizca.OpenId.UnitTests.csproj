@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Bizca.OpenId.Application\Bizca.OpenId.Application.csproj" />
+  </ItemGroup>
+
+</Project>
+
+

@@ -25,6 +25,8 @@ builder.Services.AddOptionsWithValidation<KeycloakOptions>(KeycloakOptions.Secti
 builder.Services.AddKeycloakHttpClient();
 builder.Services.AddInfrastructure(
 	typeof(Bizca.OpenId.Application.Usecases.Tokens.Exchange.Handler),
+	typeof(Bizca.OpenId.Application.Usecases.Auth.Register.Handler),
+	typeof(Bizca.OpenId.Application.Usecases.Auth.VerifyEmail.Handler),
 	typeof(ValidationDecorator.RequestHandler<,>),
 	typeof(LoggingDecorator.RequestHandler<,>));
 

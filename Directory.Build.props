@@ -40,6 +40,7 @@
 		<PackageReference Include="AutoFixture"/>
 		<PackageReference Include="RichardSzalay.MockHttp"/>
 		<PackageReference Include="FluentAssertions"/>
+		<PackageReference Include="Moq"/>
 		<PackageReference Include="Moq.Contrib.HttpClient"/>
 		<PackageReference Include="coverlet.collector">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
