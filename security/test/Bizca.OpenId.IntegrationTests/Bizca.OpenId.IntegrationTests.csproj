@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Testcontainers" />
+    <PackageReference Include="Testcontainers.Keycloak" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Bizca.OpenId.Server\Bizca.OpenId.Server.csproj" />
+  </ItemGroup>
+
+</Project>

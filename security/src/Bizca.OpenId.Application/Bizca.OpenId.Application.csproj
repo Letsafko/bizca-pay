@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <PackageReference Include="Ardalis.SmartEnum" />
+      <PackageReference Include="FluentValidation" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\sdk\SharedKernel\SharedKernel.csproj" />
+    </ItemGroup>
+
+</Project>
