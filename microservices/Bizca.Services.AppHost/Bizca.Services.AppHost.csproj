@@ -1,0 +1,18 @@
+﻿<Project Sdk="Aspire.AppHost.Sdk/13.1.1">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <UserSecretsId>bizca.services.apphost.secrets</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\security\src\Bizca.OpenId.Server\Bizca.OpenId.Server.csproj" />
+      <ProjectReference Include="..\user\src\Bizca.Users.Api\Bizca.Users.Api.csproj" />
+    </ItemGroup>
+
+</Project>
+

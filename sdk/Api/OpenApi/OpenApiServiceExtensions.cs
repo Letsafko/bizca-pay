@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using Bizca.Sdk.Api.OpenApi.Transformers;
+using Bizca.Sdk.Api.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,15 +22,11 @@ public static class OpenApiServiceExtensions
 	/// <param name="services">The <see cref="IServiceCollection"/> to configure.</param>
 	/// <param name="configuration">The application configuration used to bind <see cref="OpenApiOptions"/> from <c>appsettings.json</c>.</param>
 	/// <returns>The same <see cref="IServiceCollection"/> for chaining.</returns>
-	public static IServiceCollection AddBizcaOpenApi(
-        this IServiceCollection services,
-        IConfiguration configuration)
+	public static void AddBizcaOpenApi(this IServiceCollection services, IConfiguration configuration)
     {
-        // IOptions<OpenApiOptions> pipeline — feeds UseBizcaOpenApi and any consumer via DI.
-        services.ConfigureOptions<OpenApiOptionsSetup>();
-
         var options = new OpenApiOptions();
         configuration.GetSection(nameof(OpenApiOptions)).Bind(options);
+		services.AddOptionsWithValidation<OpenApiOptions>(OpenApiOptions.SectionName);
         services.AddApiVersioning(o =>
         {
             o.DefaultApiVersion = ApiVersion.Default;
@@ -52,22 +49,20 @@ public static class OpenApiServiceExtensions
                 }
             });
         }
+	}
 
-        return services;
-    }
-
-    /// <summary>
-    /// Maps OpenAPI spec endpoints (<c>/openapi/{version}.json</c>) and the Scalar interactive UI.
-    /// Both are exposed only in <c>Development</c> and <c>Local</c> environments.
-    /// </summary>
-    /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
-    /// <returns>The same <see cref="WebApplication"/> for chaining.</returns>
-    public static WebApplication UseBizcaOpenApi(this WebApplication app)
+	/// <summary>
+	/// Maps OpenAPI spec endpoints (<c>/openapi/{version}.json</c>) and the Scalar interactive UI.
+	/// Both are exposed only in <c>Development</c> and <c>Local</c> environments.
+	/// </summary>
+	/// <param name="app">The <see cref="WebApplication"/> to configure.</param>
+	/// <returns>The same <see cref="WebApplication"/> for chaining.</returns>
+	public static void UseBizcaOpenApi(this WebApplication app)
     {
         if (!app.Environment.IsDevelopment() && !app.Environment.IsEnvironment("Local"))
-        {
-            return app;
-        }
+		{
+			return;
+		}
 
         app.MapOpenApi();
         var options = app.Services.GetRequiredService<IOptions<OpenApiOptions>>().Value;
@@ -77,7 +72,5 @@ public static class OpenApiServiceExtensions
                 .WithTitle(options.Title ?? string.Empty)
                 .AddDocuments(options.Versions);
         });
-
-        return app;
-    }
+	}
 }
