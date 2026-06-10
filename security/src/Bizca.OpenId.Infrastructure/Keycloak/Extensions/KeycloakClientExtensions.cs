@@ -13,7 +13,9 @@ internal static class KeycloakClientExtensions
         services.AddScoped<IKeycloakHttpClient, KeycloakHttpClient>();
         services.AddScoped<IKeycloakTokenClient, KeycloakTokenClient>();
         services.AddScoped<IKeycloakUserClient, KeycloakUserClient>();
+        services.AddScoped<IKeycloakAdminClient, KeycloakAdminClient>();
         services.AddScoped<ITokenProvider, TokenProvider>();
+        services.AddScoped<IIdentityProvider, KeycloakIdentityProvider>();
 	}
 }
 
