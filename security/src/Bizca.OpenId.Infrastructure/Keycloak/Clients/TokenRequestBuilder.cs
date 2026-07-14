@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Bizca.OpenId.Infrastructure.Constants;
 using Bizca.OpenId.Infrastructure.Keycloak.Clients.Abstractions;
+using Bizca.OpenId.Infrastructure.Keycloak.Constants;
 using Microsoft.Extensions.Options;
 
 namespace Bizca.OpenId.Infrastructure.Keycloak.Clients;
@@ -16,40 +16,47 @@ internal sealed class TokenRequestBuilder(IOptions<KeycloakOptions> options) : I
     {
         var parameters = new Dictionary<string, string>
         {
-            [OAuth2Constants.ParameterNames.GrantType] = OAuth2GrantTypes.AuthorizationCode,
-            [OAuth2Constants.ParameterNames.ClientSecret] = _options.ClientSecret,
-            [OAuth2Constants.ParameterNames.ClientId] = _options.ClientId,
-            [OAuth2Constants.ParameterNames.RedirectUri] = redirectUri,
-            [OAuth2Constants.ParameterNames.Code] = code
+            [OAuth2KeycloakConstants.ParameterNames.GrantType] = OAuth2KeycloakConstants.GrantTypes.AuthorizationCode,
+            [OAuth2KeycloakConstants.ParameterNames.ClientSecret] = _options.ClientSecret,
+            [OAuth2KeycloakConstants.ParameterNames.ClientId] = _options.ClientId,
+            [OAuth2KeycloakConstants.ParameterNames.RedirectUri] = redirectUri,
+            [OAuth2KeycloakConstants.ParameterNames.Code] = code
         };
 
         if (!string.IsNullOrWhiteSpace(codeVerifier))
         {
-            parameters[OAuth2Constants.ParameterNames.CodeVerifier] = codeVerifier;
+            parameters[OAuth2KeycloakConstants.ParameterNames.CodeVerifier] = codeVerifier;
         }
 
         return parameters;
     }
 
-    public Dictionary<string, string> BuildClientCredentialsRequest()
+    public Dictionary<string, string> BuildClientCredentialsRequest(bool withScopes = false)
     {
-        return new Dictionary<string, string>
+        var request = new Dictionary<string, string>
         {
-            [OAuth2Constants.ParameterNames.GrantType] = OAuth2GrantTypes.ClientCredentials,
-            [OAuth2Constants.ParameterNames.ClientSecret] = _options.ClientSecret,
-            [OAuth2Constants.ParameterNames.ClientId] = _options.ClientId,
-            [OAuth2Constants.ParameterNames.Scope] = _options.Scopes
+            [OAuth2KeycloakConstants.ParameterNames.GrantType] = OAuth2KeycloakConstants.GrantTypes.ClientCredentials,
+            [OAuth2KeycloakConstants.ParameterNames.ClientSecret] = _options.ClientSecret,
+            [OAuth2KeycloakConstants.ParameterNames.ClientId] = _options.ClientId
         };
-    }
+
+		if(withScopes)
+		{
+			request[OAuth2KeycloakConstants.ParameterNames.Scope] = _options.Scopes;
+		}
+
+		return request;
+	}
+	
 
     public Dictionary<string, string> BuildRefreshTokenRequest(string refreshToken)
     {
         return new Dictionary<string, string>
         {
-            [OAuth2Constants.ParameterNames.GrantType] = OAuth2GrantTypes.RefreshToken,
-            [OAuth2Constants.ParameterNames.ClientSecret] = _options.ClientSecret,
-            [OAuth2Constants.ParameterNames.ClientId] = _options.ClientId,
-            [OAuth2Constants.ParameterNames.RefreshToken] = refreshToken
+            [OAuth2KeycloakConstants.ParameterNames.GrantType] = OAuth2KeycloakConstants.GrantTypes.RefreshToken,
+            [OAuth2KeycloakConstants.ParameterNames.ClientSecret] = _options.ClientSecret,
+            [OAuth2KeycloakConstants.ParameterNames.ClientId] = _options.ClientId,
+            [OAuth2KeycloakConstants.ParameterNames.RefreshToken] = refreshToken
         };
     }
 
@@ -57,10 +64,10 @@ internal sealed class TokenRequestBuilder(IOptions<KeycloakOptions> options) : I
     {
         return new Dictionary<string, string>
         {
-            [OAuth2Constants.ParameterNames.ClientSecret] = _options.ClientSecret,
-            [OAuth2Constants.ParameterNames.TokenTypeHint] = tokenTypeHint,
-            [OAuth2Constants.ParameterNames.ClientId] = _options.ClientId,
-            [OAuth2Constants.ParameterNames.Token] = token
+            [OAuth2KeycloakConstants.ParameterNames.ClientSecret] = _options.ClientSecret,
+            [OAuth2KeycloakConstants.ParameterNames.TokenTypeHint] = tokenTypeHint,
+            [OAuth2KeycloakConstants.ParameterNames.ClientId] = _options.ClientId,
+            [OAuth2KeycloakConstants.ParameterNames.Token] = token
         };
     }
 }

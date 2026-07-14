@@ -2,7 +2,7 @@
 
 internal static class Constant
 {
-	internal const string HttpClientName = "KeycloakAdmin";
+	internal const string KeycloakTestClientNameAdmin = "KeycloakTestAdmin";
 	internal static class OpenIdProvider
 	{
 		internal static class Keycloak

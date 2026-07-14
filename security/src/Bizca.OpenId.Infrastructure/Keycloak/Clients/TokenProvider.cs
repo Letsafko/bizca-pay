@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Bizca.OpenId.Application.Abstractions;
 using Bizca.OpenId.Application.Models;
-using Bizca.OpenId.Infrastructure.Constants;
 using Bizca.OpenId.Infrastructure.Keycloak.Clients.Abstractions;
+using Bizca.OpenId.Infrastructure.Keycloak.Constants;
 
 namespace Bizca.OpenId.Infrastructure.Keycloak.Clients;
 
@@ -35,7 +35,7 @@ internal sealed class TokenProvider(
 
 	public Task<bool> RevokeTokenAsync(
 		string token,
-		string tokenTypeHint = OAuth2Constants.ParameterNames.RefreshToken,
+		string tokenTypeHint = OAuth2KeycloakConstants.ParameterNames.RefreshToken,
 		CancellationToken cancellationToken = default)
 	{
 		return tokenClient.RevokeTokenAsync(token, tokenTypeHint, cancellationToken);

@@ -14,7 +14,7 @@ namespace Bizca.OpenId.IntegrationTests.Endpoints.Tokens;
 public sealed class LogoutTests(KeycloakOpenIdApiFixture apiFixture)
 {
 	[Fact]
-	public async Task AValidRefreshToken_IsSuccessfullyRevoked()
+	public async Task Logout_ShouldSuccessfullyRevokeRefreshToken_WhenItIsValid()
 	{
 		// Arrange
 		var (_, refreshToken) = await apiFixture.KeycloakAdminService.GetRefreshableTokenAsync();
@@ -36,7 +36,7 @@ public sealed class LogoutTests(KeycloakOpenIdApiFixture apiFixture)
 	}
 
 	[Fact]
-	public async Task AValidAccessToken_IsSuccessfullyRevoked()
+	public async Task Logout_ShouldSuccessfullyRevokeAccessToken_WhenItIsValid()
 	{
 		// Arrange
 		var accessToken = await apiFixture.KeycloakAdminService.GetClientCredentialsTokenAsync();
@@ -58,7 +58,7 @@ public sealed class LogoutTests(KeycloakOpenIdApiFixture apiFixture)
 	}
 
 	[Fact]
-	public async Task AnEmptyToken_ReturnsBadRequest()
+	public async Task Logout_ShouldReturnsBadRequest_WhenTokenIsEmpty()
 	{
 		// Arrange
 		var request = new LogoutRequest
@@ -75,7 +75,7 @@ public sealed class LogoutTests(KeycloakOpenIdApiFixture apiFixture)
 	}
 
 	[Fact]
-	public async Task ALogoutRequest_WithoutTokenTypeHint_DefaultsToRefreshToken()
+	public async Task Logout_ShouldDefaultToRefreshToken_WhenTokenTypeHintIsNotProvided()
 	{
 		// Arrange
 		var (_, refreshToken) = await apiFixture.KeycloakAdminService.GetRefreshableTokenAsync();
