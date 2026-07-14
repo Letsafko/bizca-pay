@@ -1,4 +1,6 @@
-﻿namespace Bizca.OpenId.Infrastructure.Keycloak;
+﻿using FluentValidation;
+
+namespace Bizca.OpenId.Infrastructure.Keycloak;
 
 /// <summary>
 /// Configuration options for Keycloak integration.
@@ -43,3 +45,19 @@ public sealed class KeycloakOptions
     public int HttpTimeoutSeconds { get; init; } = 30;
 }
 
+public sealed class KeycloakOptionsValidator : AbstractValidator<KeycloakOptions>
+{
+	public KeycloakOptionsValidator()
+	{
+		RuleFor(x => x.Authority)
+			.NotNull()
+			.WithMessage("{PropertyName} is required.")
+			.Must(x => x.EndsWith('/'))
+			.WithMessage("{PropertyName} should end with '/'");
+
+		RuleFor(x => x.ClientId).NotNull().WithMessage("{PropertyName} is required.");
+		RuleFor(x => x.ClientSecret).NotNull().WithMessage("{PropertyName} is required.");
+		RuleFor(x => x.Scopes).NotNull().WithMessage("{PropertyName} is required.");
+		RuleFor(x => x.Realm).NotNull().WithMessage("{PropertyName} is required.");
+	}
+}

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Bizca.OpenId.Server.Endpoints.Tokens;
+namespace Bizca.OpenId.Auth.Endpoints.Tokens;
 
 using LogoutCommand = Bizca.OpenId.Application.Usecases.Tokens.Logout.Command;
 using LogoutResponse = Bizca.OpenId.Application.Usecases.Tokens.Logout.Response;

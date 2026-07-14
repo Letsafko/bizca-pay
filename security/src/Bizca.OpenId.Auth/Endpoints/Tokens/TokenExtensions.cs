@@ -2,7 +2,7 @@ using System;
 using Bizca.OpenId.ApiModels.Responses;
 using Bizca.OpenId.Application.Models;
 
-namespace Bizca.OpenId.Server.Endpoints.Tokens;
+namespace Bizca.OpenId.Auth.Endpoints.Tokens;
 
 internal static class TokenExtensions
 {

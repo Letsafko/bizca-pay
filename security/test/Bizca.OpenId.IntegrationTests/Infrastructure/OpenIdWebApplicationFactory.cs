@@ -10,38 +10,37 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Bizca.OpenId.IntegrationTests.Infrastructure;
 
-public sealed class OpenIdWebApplicationFactory(IOpenIdConfiguration configuration) : WebApplicationFactory<Program>
+public sealed class OpenIdWebApplicationFactory(
+	IOpenIdConfiguration openIdConfiguration) : WebApplicationFactory<Program>
 {
 	protected override void ConfigureWebHost(IWebHostBuilder builder)
 	{
 		builder.ConfigureAppConfiguration((_, config) =>
 		{
 			config.AddInMemoryCollection([
-				new KeyValuePair<string, string?>("KeycloakOptions:Authority", configuration.Authority),
-				new KeyValuePair<string, string?>("KeycloakOptions:ClientId", configuration.ClientId),
-				new KeyValuePair<string, string?>("KeycloakOptions:ClientSecret", configuration.ClientSecret),
-				new KeyValuePair<string, string?>("KeycloakOptions:Realm", configuration.Realm),
+				new KeyValuePair<string, string?>("KeycloakOptions:Authority", openIdConfiguration.Authority),
+				new KeyValuePair<string, string?>("KeycloakOptions:ClientId", openIdConfiguration.ClientId),
+				new KeyValuePair<string, string?>("KeycloakOptions:ClientSecret", openIdConfiguration.ClientSecret),
+				new KeyValuePair<string, string?>("KeycloakOptions:Realm", openIdConfiguration.Realm),
 				new KeyValuePair<string, string?>("KeycloakOptions:Scopes", "openid profile email"),
 				new KeyValuePair<string, string?>("KeycloakOptions:JwksCacheDurationSeconds", "3600"),
 				new KeyValuePair<string, string?>("KeycloakOptions:HttpTimeoutSeconds", "30")
 			]!);
 		});
 
-		builder.ConfigureTestServices(services =>
-		{
-			services.AddHttpClient(Constant.HttpClientName, client =>
+		builder
+			.UseEnvironment("IntegrationTest")
+			.ConfigureTestServices(services =>
 			{
-				if (!string.IsNullOrWhiteSpace(configuration.BaseAddress))
+				services.AddHttpClient(Constant.KeycloakTestClientNameAdmin, client =>
 				{
-					client.BaseAddress = new Uri(configuration.BaseAddress);
-				}
+					client.BaseAddress = new Uri(openIdConfiguration.BaseAddress);
+					client.Timeout = TimeSpan.FromSeconds(30);
+				});
+
+				services.AddSingleton(openIdConfiguration);
+				services.AddSingleton<KeycloakAdminTestService>();
 			});
-
-			services.AddSingleton(configuration);
-			services.AddSingleton<KeycloakAdminService>();
-		});
-
-		builder.UseEnvironment("IntegrationTest");
 	}
 
 	protected override void ConfigureClient(HttpClient client)

@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Bizca.OpenId.Server.Endpoints.Tokens;
+namespace Bizca.OpenId.Auth.Endpoints.Tokens;
 
-using TokenExchangeCommand = Bizca.OpenId.Application.Usecases.Tokens.Exchange.Command;
+using CreateTokenCommand = Bizca.OpenId.Application.Usecases.Tokens.Create.Command;
 
 public static class Create
 {
@@ -19,11 +19,11 @@ public static class Create
 		public void MapEndpoint(IEndpointRouteBuilder app)
 		{
 			app.MapPost("/auth/token", async(
-				ExchangeTokenRequest exchangeTokenRequest,
-				IRequestHandler<TokenExchangeCommand, TokenResponse> handler,
+				CreateTokenRequest createTokenRequest,
+				IRequestHandler<CreateTokenCommand, TokenResponse> handler,
 				CancellationToken cancellationToken) =>
 			{
-				var command = exchangeTokenRequest.ToCommand();
+				var command = createTokenRequest.ToCommand();
 				var result = await handler.HandleAsync(command, cancellationToken);
 
 				return result.Match(
@@ -40,11 +40,11 @@ public static class Create
 		}
 	}
 
-	private static TokenExchangeCommand? ToCommand(this ExchangeTokenRequest? request)
+	private static CreateTokenCommand? ToCommand(this CreateTokenRequest? request)
 	{
 		return request is null
 			? null
-			: new TokenExchangeCommand(
+			: new CreateTokenCommand(
 				request.GrantType,
 				request.Code,
 				request.RedirectUri,

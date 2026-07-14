@@ -6,7 +6,7 @@ using Bizca.Sdk.Api.OpenId;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Bizca.OpenId.Server.Configuration;
+namespace Bizca.OpenId.Auth.Infrastructure.Configuration;
 
 public sealed class TokenValidationParametersFactory(
 	IOptions<KeycloakOptions> keycloakOptionsAccessor,

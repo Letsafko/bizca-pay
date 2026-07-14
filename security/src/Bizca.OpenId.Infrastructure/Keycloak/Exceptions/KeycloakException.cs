@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Text.Json.Serialization;
 
 namespace Bizca.OpenId.Infrastructure.Keycloak.Exceptions;
@@ -15,23 +16,26 @@ public sealed class KeycloakException : Exception
 
 	[JsonConstructor]
 	internal KeycloakException(
-		string code,
+		string errorCode,
 		string? description,
 		int httpStatusCode,
 		Exception? innerException = null)
-		: base($"{code}:{description}", innerException)
+		: base($"{errorCode}:{description}", innerException)
 	{
-		ValidateState(code, description, httpStatusCode);
+		ValidateState(errorCode, description, httpStatusCode);
 		HttpStatusCode = httpStatusCode;
 		Description = description;
-		Code = code;
+		Code = errorCode;
 	}
 
-	internal KeycloakException(Enum errCode, Exception? innerException = null)
+	internal KeycloakException(
+		Enum errorCode,
+		HttpStatusCode? httpStatusCode = null,
+		Exception? innerException = null)
 		: this(
-			errCode.GetName(),
-			errCode.GetDescription(),
-			errCode.GetHttpStatusCode(),
+			errorCode.GetName(),
+			errorCode.GetDescription(),
+			(int?)httpStatusCode ?? errorCode.GetHttpStatusCode(),
 			innerException)
 	{
 	}

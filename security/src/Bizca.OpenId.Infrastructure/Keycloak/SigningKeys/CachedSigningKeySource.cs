@@ -47,7 +47,7 @@ internal sealed class CachedSigningKeySource(
         await inner.RefreshAsync(cancellationToken);
         var keys = await inner.GetSigningKeysAsync(cancellationToken);
         _cachedKeys = keys;
-        _lastRefresh = DateTime.UtcNow;
+        _lastRefresh = dateTimeProvider.UtcNow;
     }
 
     private bool IsCacheExpired(DateTime now)

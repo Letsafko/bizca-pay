@@ -9,7 +9,7 @@ internal interface ITokenRequestBuilder
 		string redirectUri,
 		string? codeVerifier = null);
 
-	Dictionary<string, string> BuildClientCredentialsRequest();
+	Dictionary<string, string> BuildClientCredentialsRequest(bool withScopes = false);
 
 	Dictionary<string, string> BuildRefreshTokenRequest(string refreshToken);
 

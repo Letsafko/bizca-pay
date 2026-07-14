@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Bizca.OpenId.Server.ExceptionHandlers;
+namespace Bizca.OpenId.Auth.Infrastructure;
 
 internal sealed class KeycloakExceptionHandler(ILogger<KeycloakExceptionHandler> logger) : IExceptionHandler
 {

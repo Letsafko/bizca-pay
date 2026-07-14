@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Bizca.OpenId.Infrastructure.Constants;
 using Bizca.OpenId.Infrastructure.Keycloak.Clients.Abstractions;
+using Bizca.OpenId.Infrastructure.Keycloak.Constants;
 using Bizca.OpenId.Infrastructure.Keycloak.Exceptions;
 using Bizca.OpenId.Infrastructure.Keycloak.Models;
 
@@ -14,23 +13,20 @@ namespace Bizca.OpenId.Infrastructure.Keycloak.Clients;
 
 internal sealed class KeycloakHttpClient(IHttpClientFactory httpClientFactory) : IKeycloakHttpClient
 {
-	private readonly HttpClient _httpClient = httpClientFactory.CreateClient(OAuth2Constants.Keycloak);
+	private readonly HttpClient _httpClient = httpClientFactory.CreateClient(OAuth2KeycloakConstants.KeycloakClientName);
 	public async Task<TokenResult> RequestTokenAsync(
         Dictionary<string, string> parameters,
         CancellationToken cancellationToken = default)
     {
         var content = new FormUrlEncodedContent(parameters);
-        var response = await _httpClient.PostAsync(
-            OAuth2Constants.Endpoints.Token,
-            content,
-            cancellationToken);
+        var response = await _httpClient.PostAsync(OAuth2KeycloakConstants.Endpoints.Token, content, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
-			return (await response.Content.ReadFromJsonAsync<TokenResult>(cancellationToken))!;
+			return await KeycloakJsonContext.GetTokenResult(response, cancellationToken);
 		}
 
-		var errorResult = await GetErrorResult(response);
+		var errorResult = await KeycloakJsonContext.GetErrorResult(response, cancellationToken);
 		throw new KeycloakException(errorResult.Error!, errorResult.ErrorDescription, (int)response.StatusCode);
     }
 
@@ -39,7 +35,7 @@ internal sealed class KeycloakHttpClient(IHttpClientFactory httpClientFactory) :
         CancellationToken cancellationToken = default)
     {
         var content = new FormUrlEncodedContent(parameters);
-        var url = new Uri(OAuth2Constants.Endpoints.Revoke, UriKind.Relative);
+        var url = new Uri(OAuth2KeycloakConstants.Endpoints.Revoke, UriKind.Relative);
 
         var response = await _httpClient.PostAsync(url, content, cancellationToken);
 
@@ -48,7 +44,7 @@ internal sealed class KeycloakHttpClient(IHttpClientFactory httpClientFactory) :
 			return true;
 		}
 
-		var errorResult = await GetErrorResult(response);
+		var errorResult = await KeycloakJsonContext.GetErrorResult(response, cancellationToken);
 		throw new KeycloakException(errorResult.Error!, errorResult.ErrorDescription, (int)response.StatusCode);
 	}
 
@@ -56,23 +52,18 @@ internal sealed class KeycloakHttpClient(IHttpClientFactory httpClientFactory) :
         string accessToken,
         CancellationToken cancellationToken = default)
     {
-        var url = new Uri(OAuth2Constants.Endpoints.UserInfo, UriKind.Relative);
+        var url = new Uri(OAuth2KeycloakConstants.Endpoints.UserInfo, UriKind.Relative);
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Authorization = new AuthenticationHeaderValue(OAuth2Constants.AuthenticationScheme, accessToken);
+        request.Headers.Authorization = new AuthenticationHeaderValue(OAuth2KeycloakConstants.AuthorizationBearerScheme, accessToken);
 
         var response = await _httpClient.SendAsync(request, cancellationToken);
 
 		if(response.IsSuccessStatusCode)
 		{
-			return await response.Content.ReadFromJsonAsync<UserInfoResult>(cancellationToken);
+			return await KeycloakJsonContext.GetUserInfoResult(response, cancellationToken);
 		}
 
-		var errorResult = await GetErrorResult(response);
+		var errorResult = await KeycloakJsonContext.GetErrorResult(response, cancellationToken);
 		throw new KeycloakException(errorResult.Error!, errorResult.ErrorDescription, (int)response.StatusCode);
-	}
-
-	private static Task<ErrorResult> GetErrorResult(HttpResponseMessage response)
-	{
-		return response.Content.ReadFromJsonAsync<ErrorResult>()!;
 	}
 }

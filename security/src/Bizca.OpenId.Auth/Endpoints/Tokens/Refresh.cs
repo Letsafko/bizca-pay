@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Bizca.OpenId.Server.Endpoints.Tokens;
+namespace Bizca.OpenId.Auth.Endpoints.Tokens;
 
 using RefreshTokenCommand = Bizca.OpenId.Application.Usecases.Tokens.Refresh.Command;
 

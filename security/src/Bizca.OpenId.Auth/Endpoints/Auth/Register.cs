@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Bizca.OpenId.Server.Endpoints.Auth;
+namespace Bizca.OpenId.Auth.Endpoints.Auth;
 
 using RegisterCommand = Bizca.OpenId.Application.Usecases.Auth.Register.Command;
 using RegisterResponse = Bizca.OpenId.Application.Usecases.Auth.Register.Response;

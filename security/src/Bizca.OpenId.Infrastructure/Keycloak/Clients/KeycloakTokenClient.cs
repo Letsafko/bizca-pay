@@ -1,14 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Bizca.OpenId.Infrastructure.Constants;
 using Bizca.OpenId.Infrastructure.Keycloak.Clients.Abstractions;
+using Bizca.OpenId.Infrastructure.Keycloak.Constants;
 using Bizca.OpenId.Infrastructure.Keycloak.Models;
 
 namespace Bizca.OpenId.Infrastructure.Keycloak.Clients;
 
-internal sealed class KeycloakTokenClient(
-	IKeycloakHttpClient keycloakHttpClient,
-	ITokenRequestBuilder tokenRequestBuilder) : IKeycloakTokenClient
+internal sealed class KeycloakTokenClient(IKeycloakHttpClient keycloakHttpClient, ITokenRequestBuilder tokenRequestBuilder) : IKeycloakTokenClient
 {
 	public Task<TokenResult> ExchangeCodeForTokenAsync(
 		string code,
@@ -22,7 +20,7 @@ internal sealed class KeycloakTokenClient(
 
 	public Task<TokenResult> GetClientCredentialsTokenAsync(CancellationToken cancellationToken = default)
 	{
-		var parameters = tokenRequestBuilder.BuildClientCredentialsRequest();
+		var parameters = tokenRequestBuilder.BuildClientCredentialsRequest(true);
 		return keycloakHttpClient.RequestTokenAsync(parameters, cancellationToken);
 	}
 
@@ -36,7 +34,7 @@ internal sealed class KeycloakTokenClient(
 
 	public Task<bool> RevokeTokenAsync(
 		string token,
-		string tokenTypeHint = OAuth2Constants.ParameterNames.RefreshToken,
+		string tokenTypeHint = OAuth2KeycloakConstants.ParameterNames.RefreshToken,
 		CancellationToken cancellationToken = default)
 	{
 		var parameters = tokenRequestBuilder.BuildRevokeTokenRequest(token, tokenTypeHint);

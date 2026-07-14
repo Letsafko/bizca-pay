@@ -1,9 +1,9 @@
-﻿using Bizca.OpenId.Server.Configuration;
+﻿using Bizca.OpenId.Auth.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Bizca.OpenId.Server.Extensions;
+namespace Bizca.OpenId.Auth.Extensions;
 
 internal static class JwtBearerExtensions
 {
