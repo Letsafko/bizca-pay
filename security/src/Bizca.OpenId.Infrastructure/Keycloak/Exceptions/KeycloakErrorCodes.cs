@@ -2,6 +2,9 @@ namespace Bizca.OpenId.Infrastructure.Keycloak.Exceptions;
 
 public enum KeycloakErrorCodes
 {
+	[KeycloakException("Failed to get access token", 400)]
+	AdminTokenFailed,
+
 	[KeycloakException("Invalid client credentials", 401)]
 	InvalidClientCredentials,
 

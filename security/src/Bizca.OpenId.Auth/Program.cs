@@ -1,7 +1,7 @@
-﻿using Bizca.OpenId.Server.Extensions;
+﻿using Bizca.OpenId.Auth.Extensions;
+using Bizca.OpenId.Auth.Infrastructure;
 using Bizca.OpenId.Infrastructure;
 using Bizca.OpenId.Infrastructure.Keycloak;
-using Bizca.OpenId.Server.ExceptionHandlers;
 using Bizca.Sdk.Abstractions.Pipelines;
 using Bizca.Sdk.Api;
 using Bizca.Sdk.Api.MinimalApi;
@@ -19,18 +19,18 @@ builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandlers(services =>
 {
 	services.AddExceptionHandler<KeycloakExceptionHandler>();
+	services.AddExceptionHandler<GlobalExceptionHandler>();
 });
 
 builder.Services.AddOptionsWithValidation<KeycloakOptions>(KeycloakOptions.SectionName);
-builder.Services.AddKeycloakHttpClient();
 builder.Services.AddInfrastructure(
-	typeof(Bizca.OpenId.Application.Usecases.Tokens.Exchange.Handler),
+	typeof(Bizca.OpenId.Application.Usecases.Tokens.Create.Handler),
 	typeof(Bizca.OpenId.Application.Usecases.Auth.Register.Handler),
 	typeof(Bizca.OpenId.Application.Usecases.Auth.VerifyEmail.Handler),
 	typeof(ValidationDecorator.RequestHandler<,>),
 	typeof(LoggingDecorator.RequestHandler<,>));
 
-builder.Services.AddValidatorsFromAssemblyContaining<Bizca.OpenId.Application.Usecases.Tokens.Exchange.Validator>();
+builder.Services.AddValidatorsFromAssemblyContaining<Bizca.OpenId.Application.Usecases.Tokens.Create.Validator>();
 builder.Services.AddJwtBearerAuthentication();
 builder.Services.AddBizcaOpenApi(builder.Configuration);
 builder.Services.AddEndpoints(typeof(Program).Assembly);

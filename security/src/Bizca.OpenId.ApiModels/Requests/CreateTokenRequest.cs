@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Bizca.OpenId.ApiModels.Requests;
 
-public sealed record ExchangeTokenRequest
+public sealed record CreateTokenRequest
 {
 	[Required, JsonPropertyName("grant_type")]
 	public string? GrantType { get; init; }

@@ -1,4 +1,4 @@
-namespace Bizca.OpenId.Server.Endpoints;
+namespace Bizca.OpenId.Auth.Endpoints;
 
 internal static class Tags
 {

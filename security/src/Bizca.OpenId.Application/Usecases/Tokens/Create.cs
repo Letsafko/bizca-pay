@@ -8,7 +8,7 @@ using FluentValidation;
 
 namespace Bizca.OpenId.Application.Usecases.Tokens;
 
-public static class Exchange
+public static class Create
 {
 	public sealed record Command(
 		string? GrantType,

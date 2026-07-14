@@ -26,7 +26,7 @@ public static class Register
 				.WithMessage("{PropertyName} is required.")
 				.MinimumLength(3)
 				.WithMessage("{PropertyName} must be at least 3 characters.")
-				.MaximumLength(50)
+				.MaximumLength(100)
 				.WithMessage("{PropertyName} must not exceed 50 characters.");
 
 			RuleFor(x => x.Email)

@@ -5,7 +5,7 @@ using Bizca.OpenId.Infrastructure.Keycloak.Clients.Abstractions;
 
 namespace Bizca.OpenId.Infrastructure.Keycloak.Clients;
 
-internal sealed class KeycloakIdentityProvider(IKeycloakAdminClient adminClient) : IIdentityProvider
+internal sealed class KeycloakIdentityProvider(IKeycloakAdminClient keycloakAdminClient) : IIdentityProvider
 {
 	public async Task<string> CreateUserAsync(
 		string username,
@@ -17,7 +17,7 @@ internal sealed class KeycloakIdentityProvider(IKeycloakAdminClient adminClient)
 		CancellationToken cancellationToken = default)
 	{
 		// Create user disabled initially - will be enabled after email verification
-		var userId = await adminClient.CreateUserAsync(
+		var userId = await keycloakAdminClient.CreateUserAsync(
 			username,
 			email,
 			password,
@@ -34,21 +34,21 @@ internal sealed class KeycloakIdentityProvider(IKeycloakAdminClient adminClient)
 		string userId,
 		CancellationToken cancellationToken = default)
 	{
-		return adminClient.SendVerifyEmailActionAsync(userId, cancellationToken);
+		return keycloakAdminClient.SendVerifyEmailActionAsync(userId, cancellationToken);
 	}
 
 	public Task VerifyEmailAsync(
 		string userId,
 		CancellationToken cancellationToken = default)
 	{
-		return adminClient.UpdateEmailVerifiedAsync(userId, emailVerified: true, cancellationToken);
+		return keycloakAdminClient.UpdateEmailVerifiedAsync(userId, emailVerified: true, cancellationToken);
 	}
 
 	public Task EnableUserAsync(
 		string userId,
 		CancellationToken cancellationToken = default)
 	{
-		return adminClient.UpdateUserEnabledAsync(userId, enabled: true, cancellationToken);
+		return keycloakAdminClient.UpdateUserEnabledAsync(userId, enabled: true, cancellationToken);
 	}
 }
 

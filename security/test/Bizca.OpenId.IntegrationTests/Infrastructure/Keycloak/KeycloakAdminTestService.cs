@@ -5,12 +5,13 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Bizca.OpenId.Infrastructure.Keycloak;
+using Bizca.OpenId.Infrastructure.Keycloak.Constants;
 using Bizca.OpenId.Infrastructure.Keycloak.Models;
 using Microsoft.Extensions.Options;
 
 namespace Bizca.OpenId.IntegrationTests.Infrastructure.Keycloak;
 
-public sealed class KeycloakAdminService(
+public sealed class KeycloakAdminTestService(
 	IHttpClientFactory httpClientFactory,
 	IOptions<KeycloakOptions> keycloakOptionsAccessor)
 {
@@ -25,15 +26,14 @@ public sealed class KeycloakAdminService(
 		await CreateClientAsync(adminToken, cancellationToken);
 		await CreateTestUserAsync(adminToken, cancellationToken);
 	}
-
 	public async Task<string> GetClientCredentialsTokenAsync(CancellationToken cancellationToken = default)
 	{
-		var httpClient = httpClientFactory.CreateClient(Constant.HttpClientName);
+		var httpClient = httpClientFactory.CreateClient(Constant.KeycloakTestClientNameAdmin);
 		var content = new FormUrlEncodedContent(
 		[
-			new KeyValuePair<string, string>("grant_type", "client_credentials"),
-			new KeyValuePair<string, string>("client_id", _keycloakOptions.ClientId),
-			new KeyValuePair<string, string>("client_secret", _keycloakOptions.ClientSecret)
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.GrantType, OAuth2KeycloakConstants.GrantTypes.ClientCredentials),
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.ClientId, _keycloakOptions.ClientId),
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.ClientSecret, _keycloakOptions.ClientSecret)
 		]);
 
 		var response = await httpClient.PostAsync(
@@ -45,24 +45,23 @@ public sealed class KeycloakAdminService(
 		var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResult>(cancellationToken);
 		return tokenResponse?.AccessToken ?? throw new InvalidOperationException("Failed to get access token");
 	}
-
 	public async Task<(string AccessToken, string RefreshToken)> GetRefreshableTokenAsync(CancellationToken cancellationToken = default)
 	{
-		var httpClient = httpClientFactory.CreateClient(Constant.HttpClientName);
+		var httpClient = httpClientFactory.CreateClient(Constant.KeycloakTestClientNameAdmin);
 		var content = new FormUrlEncodedContent(
 		[
-			new KeyValuePair<string, string>("grant_type", "password"),
-			new KeyValuePair<string, string>("client_id", _keycloakOptions.ClientId),
-			new KeyValuePair<string, string>("client_secret", _keycloakOptions.ClientSecret),
-			new KeyValuePair<string, string>("username", TestUsername),
-			new KeyValuePair<string, string>("password", TestPassword),
-			new KeyValuePair<string, string>("scope", "openid offline_access")
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.GrantType, OAuth2KeycloakConstants.GrantTypes.Password),
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.ClientId, _keycloakOptions.ClientId),
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.ClientSecret, _keycloakOptions.ClientSecret),
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.Username, TestUsername),
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.Password, TestPassword),
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.Scope, "openid offline_access")
 		]);
 
 		var response = await httpClient.PostAsync(
-			$"realms/{_keycloakOptions.Realm}/protocol/openid-connect/token",
-			content,
-			cancellationToken);
+			requestUri: $"realms/{_keycloakOptions.Realm}/protocol/openid-connect/token",
+			content: content,
+			cancellationToken: cancellationToken);
 
 		response.EnsureSuccessStatusCode();
 		var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResult>(cancellationToken);
@@ -70,31 +69,6 @@ public sealed class KeycloakAdminService(
 		return string.IsNullOrWhiteSpace(tokenResponse?.RefreshToken)
 			? throw new InvalidOperationException("Failed to get refresh token - token is null or empty")
 			: (tokenResponse.AccessToken, tokenResponse.RefreshToken);
-	}
-	private async Task CreateClientAsync(string accessToken, CancellationToken cancellationToken)
-	{
-		using var httpClient = CreateClientWithAuthorizationHeader(accessToken);
-		var clientConfigRequest = new
-		{
-			secret = _keycloakOptions.ClientSecret,
-			clientId = _keycloakOptions.ClientId,
-			directAccessGrantsEnabled = true,
-			serviceAccountsEnabled = true,
-			redirectUris = new[] { "*" },
-			implicitFlowEnabled = false,
-			protocol = "openid-connect",
-			webOrigins = new[] { "*" },
-			standardFlowEnabled = true,
-			publicClient = false,
-			enabled = true
-		};
-
-		var response = await httpClient.PostAsJsonAsync(
-			requestUri: $"admin/realms/{_keycloakOptions.Realm}/clients",
-			clientConfigRequest,
-			cancellationToken);
-
-		response.EnsureSuccessStatusCode();
 	}
 
 	private async Task CreateTestUserAsync(string accessToken, CancellationToken cancellationToken)
@@ -126,7 +100,31 @@ public sealed class KeycloakAdminService(
 
 		response.EnsureSuccessStatusCode();
 	}
+	private async Task CreateClientAsync(string accessToken, CancellationToken cancellationToken)
+	{
+		using var httpClient = CreateClientWithAuthorizationHeader(accessToken);
+		var clientConfigRequest = new
+		{
+			secret = _keycloakOptions.ClientSecret,
+			clientId = _keycloakOptions.ClientId,
+			directAccessGrantsEnabled = true,
+			serviceAccountsEnabled = true,
+			redirectUris = new[] { "*" },
+			implicitFlowEnabled = false,
+			protocol = "openid-connect",
+			webOrigins = new[] { "*" },
+			standardFlowEnabled = true,
+			publicClient = false,
+			enabled = true
+		};
 
+		var response = await httpClient.PostAsJsonAsync(
+			requestUri: $"admin/realms/{_keycloakOptions.Realm}/clients",
+			clientConfigRequest,
+			cancellationToken);
+
+		response.EnsureSuccessStatusCode();
+	}
 	private async Task CreateRealmAsync(string accessToken, CancellationToken cancellationToken)
 	{
 		using var httpClient = CreateClientWithAuthorizationHeader(accessToken);
@@ -144,13 +142,13 @@ public sealed class KeycloakAdminService(
 	}
 	private async Task<string> GetAdminTokenAsync(CancellationToken cancellationToken)
 	{
-		using var httpClient = httpClientFactory.CreateClient(Constant.HttpClientName);
+		using var httpClient = httpClientFactory.CreateClient(Constant.KeycloakTestClientNameAdmin);
 		var content = new FormUrlEncodedContent(
 		[
-			new KeyValuePair<string, string>("grant_type", "password"),
-			new KeyValuePair<string, string>("client_id", "admin-cli"),
-			new KeyValuePair<string, string>("username", Constant.OpenIdProvider.Keycloak.AdminUser),
-			new KeyValuePair<string, string>("password", Constant.OpenIdProvider.Keycloak.AdminPassword)
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.GrantType, OAuth2KeycloakConstants.GrantTypes.Password),
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.Password, Constant.OpenIdProvider.Keycloak.AdminPassword),
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.Username, Constant.OpenIdProvider.Keycloak.AdminUser),
+			new KeyValuePair<string, string>(OAuth2KeycloakConstants.ParameterNames.ClientId, "admin-cli")
 		]);
 
 		var response = await httpClient.PostAsync(
@@ -164,8 +162,12 @@ public sealed class KeycloakAdminService(
 	}
 	private HttpClient CreateClientWithAuthorizationHeader(string accessToken)
 	{
-		var httpClient = httpClientFactory.CreateClient(Constant.HttpClientName);
-		httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+		var httpClient = httpClientFactory.CreateClient(Constant.KeycloakTestClientNameAdmin);
+
+		httpClient.DefaultRequestHeaders.Add(
+			name: OAuth2KeycloakConstants.AuthorizationScheme,
+			$"{OAuth2KeycloakConstants.AuthorizationBearerScheme} {accessToken}");
+
 		return httpClient;
 	}
 }

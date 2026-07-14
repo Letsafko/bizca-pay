@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Bizca.OpenId.Server.Configuration;
+namespace Bizca.OpenId.Auth.Infrastructure.Configuration;
 public sealed class JwtBearerOptionsConfigurator(TokenValidationParametersFactory tokenValidationParametersFactory)
 {
 	public void Configure(JwtBearerOptions options)

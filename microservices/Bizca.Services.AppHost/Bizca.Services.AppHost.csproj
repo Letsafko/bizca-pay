@@ -7,10 +7,11 @@
 
     <ItemGroup>
         <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+        <PackageReference Include="MessagePack" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\security\src\Bizca.OpenId.Server\Bizca.OpenId.Server.csproj" />
+      <ProjectReference Include="..\..\security\src\Bizca.OpenId.Auth\Bizca.OpenId.Auth.csproj" />
       <ProjectReference Include="..\user\src\Bizca.Users.Api\Bizca.Users.Api.csproj" />
     </ItemGroup>
 

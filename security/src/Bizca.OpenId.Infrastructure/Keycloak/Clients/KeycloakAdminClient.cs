@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Bizca.OpenId.Infrastructure.Constants;
-using Bizca.OpenId.Infrastructure.Keycloak;
 using Bizca.OpenId.Infrastructure.Keycloak.Clients.Abstractions;
+using Bizca.OpenId.Infrastructure.Keycloak.Constants;
 using Bizca.OpenId.Infrastructure.Keycloak.Exceptions;
 using Bizca.OpenId.Infrastructure.Keycloak.Models;
 using Microsoft.Extensions.Options;
@@ -17,7 +15,7 @@ internal sealed class KeycloakAdminClient(
 	IHttpClientFactory httpClientFactory,
 	IOptions<KeycloakOptions> keycloakOptionsAccessor) : IKeycloakAdminClient
 {
-	private readonly HttpClient _httpClient = httpClientFactory.CreateClient(OAuth2Constants.Keycloak);
+	private readonly HttpClient _httpClient = httpClientFactory.CreateClient(OAuth2KeycloakConstants.KeycloakClientNameAdmin);
 	private readonly KeycloakOptions _options = keycloakOptionsAccessor.Value;
 
 	private static readonly string[] VerifyEmailAction = ["VERIFY_EMAIL"];
@@ -32,8 +30,6 @@ internal sealed class KeycloakAdminClient(
 		bool enabled,
 		CancellationToken cancellationToken = default)
 	{
-		var adminToken = await GetAdminAccessTokenAsync(cancellationToken);
-
 		var userRequest = new
 		{
 			username,
@@ -46,65 +42,66 @@ internal sealed class KeycloakAdminClient(
 			{
 				new
 				{
-					type = "password",
+					type = OAuth2KeycloakConstants.GrantTypes.Password,
 					value = password,
 					temporary = false
 				}
 			}
 		};
 
-		using var request = new HttpRequestMessage(HttpMethod.Post, $"admin/realms/{_options.Realm}/users");
-		request.Headers.Add("Authorization", $"Bearer {adminToken}");
+		var url = string.Format(
+			CultureInfo.InvariantCulture,
+			OAuth2KeycloakConstants.Endpoints.Admin.CreateUserCompositeFormat,
+			_options.Realm);
+
+		using var request = new HttpRequestMessage(HttpMethod.Post, url);
 		request.Content = JsonContent.Create(userRequest);
 
 		var response = await _httpClient.SendAsync(request, cancellationToken);
 
-		if (!response.IsSuccessStatusCode)
+		if (response.IsSuccessStatusCode)
 		{
-			var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-			throw new KeycloakException(
-				"USER_CREATION_FAILED",
-				$"Failed to create user in Keycloak: {errorContent}",
-				(int)response.StatusCode);
+			var locationHeader = response.Headers.Location?.ToString();
+			if (string.IsNullOrWhiteSpace(locationHeader))
+			{
+				throw new KeycloakException(
+					"USER_ID_NOT_FOUND",
+					"Failed to extract user ID from Keycloak response",
+					500);
+			}
+
+			var segments = locationHeader.Split('/');
+			var userId = segments[^1];
+			return userId;
 		}
 
-		// Extract user ID from Location header (Keycloak returns it on successful creation)
-		var locationHeader = response.Headers.Location?.ToString();
-		if (string.IsNullOrWhiteSpace(locationHeader))
-		{
-			throw new KeycloakException(
-				"USER_ID_NOT_FOUND",
-				"Failed to extract user ID from Keycloak response",
-				500);
-		}
-
-		var segments = locationHeader.Split('/');
-		var userId = segments[segments.Length - 1];
-		return userId;
+		var errorResult = await KeycloakJsonContext.GetErrorResult(response, cancellationToken);
+		throw new KeycloakException(errorResult.Error!, errorResult.ErrorDescription, (int)response.StatusCode);
 	}
 
 	public async Task SendVerifyEmailActionAsync(
 		string userId,
 		CancellationToken cancellationToken = default)
 	{
-		var adminToken = await GetAdminAccessTokenAsync(cancellationToken);
+		var url = string.Format(
+			CultureInfo.InvariantCulture,
+			OAuth2KeycloakConstants.Endpoints.Admin.SendUserEmailVerificationCompositeFormat,
+			_options.Realm, userId);
 
-		using var request = new HttpRequestMessage(
-			HttpMethod.Put,
-			$"admin/realms/{_options.Realm}/users/{userId}/execute-actions-email");
-		request.Headers.Add("Authorization", $"Bearer {adminToken}");
+		using var request = new HttpRequestMessage(HttpMethod.Put, url);
 		request.Content = JsonContent.Create(VerifyEmailAction);
 
 		var response = await _httpClient.SendAsync(request, cancellationToken);
-
-		if (!response.IsSuccessStatusCode)
+		if (response.IsSuccessStatusCode)
 		{
-			var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-			throw new KeycloakException(
-				"EMAIL_VERIFICATION_SEND_FAILED",
-				$"Failed to send verification email: {errorContent}",
-				(int)response.StatusCode);
+			return;
 		}
+
+		var errorResult = await KeycloakJsonContext.GetErrorResult(response, cancellationToken);
+		throw new KeycloakException(
+			errorResult.Error!,
+			errorResult.ErrorDescription,
+			(int)response.StatusCode);
 	}
 
 	public async Task UpdateEmailVerifiedAsync(
@@ -112,24 +109,23 @@ internal sealed class KeycloakAdminClient(
 		bool emailVerified,
 		CancellationToken cancellationToken = default)
 	{
-		var adminToken = await GetAdminAccessTokenAsync(cancellationToken);
+		var url = string.Format(
+			CultureInfo.InvariantCulture,
+			OAuth2KeycloakConstants.Endpoints.Admin.UpdateEmailVerificationCompositeFormat,
+			_options.Realm, userId);
 
-		using var request = new HttpRequestMessage(
-			HttpMethod.Put,
-			$"admin/realms/{_options.Realm}/users/{userId}");
-		request.Headers.Add("Authorization", $"Bearer {adminToken}");
+		using var request = new HttpRequestMessage(HttpMethod.Put, url);
 		request.Content = JsonContent.Create(new { emailVerified });
 
 		var response = await _httpClient.SendAsync(request, cancellationToken);
 
-		if (!response.IsSuccessStatusCode)
+		if (response.IsSuccessStatusCode)
 		{
-			var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-			throw new KeycloakException(
-				"EMAIL_VERIFICATION_UPDATE_FAILED",
-				$"Failed to update email verification status: {errorContent}",
-				(int)response.StatusCode);
+			return;
 		}
+
+		var errorResult = await KeycloakJsonContext.GetErrorResult(response, cancellationToken);
+		throw new KeycloakException(errorResult.Error!, errorResult.ErrorDescription, (int)response.StatusCode);
 	}
 
 	public async Task UpdateUserEnabledAsync(
@@ -137,58 +133,21 @@ internal sealed class KeycloakAdminClient(
 		bool enabled,
 		CancellationToken cancellationToken = default)
 	{
-		var adminToken = await GetAdminAccessTokenAsync(cancellationToken);
+		var url = string.Format(
+			CultureInfo.InvariantCulture,
+			OAuth2KeycloakConstants.Endpoints.Admin.UpdateUserEnabledCompositeFormat,
+			_options.Realm, userId);
 
-		using var request = new HttpRequestMessage(
-			HttpMethod.Put,
-			$"admin/realms/{_options.Realm}/users/{userId}");
-		request.Headers.Add("Authorization", $"Bearer {adminToken}");
+		using var request = new HttpRequestMessage(HttpMethod.Put, url);
 		request.Content = JsonContent.Create(new { enabled });
 
 		var response = await _httpClient.SendAsync(request, cancellationToken);
-
-		if (!response.IsSuccessStatusCode)
+		if (response.IsSuccessStatusCode)
 		{
-			var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-			throw new KeycloakException(
-				"USER_ENABLED_UPDATE_FAILED",
-				$"Failed to update user enabled status: {errorContent}",
-				(int)response.StatusCode);
-		}
-	}
-
-	public async Task<string> GetAdminAccessTokenAsync(CancellationToken cancellationToken = default)
-	{
-		var content = new FormUrlEncodedContent(
-		[
-			new KeyValuePair<string, string>(OAuth2Constants.ParameterNames.GrantType, "client_credentials"),
-			new KeyValuePair<string, string>(OAuth2Constants.ParameterNames.ClientId, _options.ClientId),
-			new KeyValuePair<string, string>(OAuth2Constants.ParameterNames.ClientSecret, _options.ClientSecret)
-		]);
-
-		var response = await _httpClient.PostAsync(
-			OAuth2Constants.Endpoints.Token,
-			content,
-			cancellationToken);
-
-		if (!response.IsSuccessStatusCode)
-		{
-			var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-			throw new KeycloakException(
-				"ADMIN_TOKEN_FAILED",
-				$"Failed to get admin access token: {errorContent}",
-				(int)response.StatusCode);
+			return;
 		}
 
-		var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResult>(cancellationToken);
-		return tokenResponse?.AccessToken ?? throw new KeycloakException(
-			"ADMIN_TOKEN_NULL",
-			"Admin access token is null",
-			500);
+		var errorResult = await KeycloakJsonContext.GetErrorResult(response, cancellationToken);
+		throw new KeycloakException(errorResult.Error!, errorResult.ErrorDescription, (int)response.StatusCode);
 	}
 }
-
-
-
-
-

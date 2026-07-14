@@ -23,7 +23,7 @@ var postgres = builder
 var database = postgres.AddDatabase(PostgresConstants.DatabaseResourceName, PostgresConstants.DatabaseName);
 
 builder
-    .AddProject<Bizca_OpenId_Server>(ServiceConstants.OpenIdApiName)
+    .AddProject<Bizca_OpenId_Auth>(ServiceConstants.OpenIdApiName)
     .WithReplicas(ServiceConstants.DefaultReplicas)
     .WaitFor(keycloak);
 

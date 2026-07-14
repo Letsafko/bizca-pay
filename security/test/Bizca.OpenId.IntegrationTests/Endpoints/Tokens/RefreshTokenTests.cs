@@ -15,7 +15,7 @@ namespace Bizca.OpenId.IntegrationTests.Endpoints.Tokens;
 public sealed class RefreshTokenTests(KeycloakOpenIdApiFixture apiFixture)
 {
 	[Fact]
-	public async Task AValidRefreshToken_ReturnsNewAccessToken()
+	public async Task RefreshToken_ShouldReturnNewAccessToken_WhenItIsValid()
 	{
 		// Arrange - Get a valid refresh token first
 		var (_, refreshToken) = await apiFixture.KeycloakAdminService.GetRefreshableTokenAsync();
@@ -37,7 +37,7 @@ public sealed class RefreshTokenTests(KeycloakOpenIdApiFixture apiFixture)
 	}
 
 	[Fact]
-	public async Task AnEmptyRefreshToken_ReturnsBadRequest()
+	public async Task RefreshToken_ShouldReturnBadRequest_WhenTokenIsEmpty()
 	{
 		// Arrange
 		var request = new RefreshTokenRequest
@@ -53,7 +53,7 @@ public sealed class RefreshTokenTests(KeycloakOpenIdApiFixture apiFixture)
 	}
 
 	[Fact]
-	public async Task AnInvalidRefreshToken_ReturnsBadRequest()
+	public async Task RefreshToken_ShouldReturnBadRequest_WhenTokenIsInvalid()
 	{
 		// Arrange
 		var request = new RefreshTokenRequest

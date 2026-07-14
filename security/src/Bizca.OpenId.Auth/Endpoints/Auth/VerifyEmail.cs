@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Bizca.OpenId.Server.Endpoints.Auth;
+namespace Bizca.OpenId.Auth.Endpoints.Auth;
 
 using VerifyEmailCommand = Bizca.OpenId.Application.Usecases.Auth.VerifyEmail.Command;
 using VerifyEmailResponse = Bizca.OpenId.Application.Usecases.Auth.VerifyEmail.Response;

@@ -12,7 +12,7 @@ public sealed class KeycloakOpenIdApiFixture : IAsyncLifetime
 {
 	private OpenIdWebApplicationFactory _factory = null!;
 	internal HttpClient HttpClient { get; private set; } = null!;
-	internal KeycloakAdminService KeycloakAdminService { get; private set; } = null!;
+	internal KeycloakAdminTestService KeycloakAdminService { get; private set; } = null!;
 
 	private readonly KeycloakContainer _keycloakContainer = new KeycloakBuilder()
 			.WithImage("quay.io/keycloak/keycloak:25.0.6")
@@ -36,7 +36,7 @@ public sealed class KeycloakOpenIdApiFixture : IAsyncLifetime
 		_factory = new OpenIdWebApplicationFactory(keycloakConfiguration);
 		HttpClient = _factory.CreateClient();
 
-		KeycloakAdminService = _factory.Services.GetRequiredService<KeycloakAdminService>();
+		KeycloakAdminService = _factory.Services.GetRequiredService<KeycloakAdminTestService>();
 		await KeycloakAdminService.ConfigureRealmAndClientAsync();
 	}
 

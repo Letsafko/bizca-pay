@@ -12,13 +12,15 @@ namespace Bizca.OpenId.IntegrationTests.Endpoints.Tokens;
 
 [Collection(KeycloakFixtureCollection.Name)]
 [Trait("Category", "Integration")]
-public sealed class TokenExchangeTests(KeycloakOpenIdApiFixture apiFixture)
+public sealed class CreateTokenTests(KeycloakOpenIdApiFixture apiFixture)
 {
+	private const int DefaultTokenDurationTimeInMinutes = 1;
+
 	[Fact]
-	public async Task AValidClientCredentialsRequest_ReturnsAccessToken()
+	public async Task CreateToken_ShouldReturnsAccessToken_WhenProcessingValidClientCredentialsRequest()
 	{
 		// Arrange
-		var request = new ExchangeTokenRequest
+		var request = new CreateTokenRequest
 		{
 			GrantType = "client_credentials"
 		};
@@ -32,14 +34,14 @@ public sealed class TokenExchangeTests(KeycloakOpenIdApiFixture apiFixture)
 
 		token.Should().NotBeNull();
 		token.AccessToken.Should().NotBeNullOrWhiteSpace();
-		token.ExpiresIn.Should().BeGreaterThan(TimeSpan.Zero);
+		token.ExpiresIn.Should().BeGreaterThan(TimeSpan.FromMinutes(DefaultTokenDurationTimeInMinutes));
 	}
 
 	[Fact]
-	public async Task AnEmptyGrantType_ReturnsBadRequest_WithValidationError()
+	public async Task CreateToken_ShouldReturnBadRequest_WhenRequestedWithEmptyGrantType()
 	{
 		// Arrange
-		var request = new ExchangeTokenRequest
+		var request = new CreateTokenRequest
 		{
 			GrantType = ""
 		};
@@ -52,10 +54,10 @@ public sealed class TokenExchangeTests(KeycloakOpenIdApiFixture apiFixture)
 	}
 
 	[Fact]
-	public async Task AnUnsupportedGrantType_ReturnsBadRequest_WithValidationError()
+	public async Task CreateToken_ShouldReturnsBadRequest_WhenRequestedWithUnsupportedGrantType()
 	{
 		// Arrange
-		var request = new ExchangeTokenRequest
+		var request = new CreateTokenRequest
 		{
 			GrantType = "password"
 		};
@@ -68,10 +70,10 @@ public sealed class TokenExchangeTests(KeycloakOpenIdApiFixture apiFixture)
 	}
 
 	[Fact]
-	public async Task AnAuthorizationCodeRequest_WithMissingCode_ReturnsBadRequest()
+	public async Task CreateToken_ShouldReturnsBadRequest_WhenProcessingAuthorizationCodeRequestWithoutCode()
 	{
 		// Arrange
-		var request = new ExchangeTokenRequest
+		var request = new CreateTokenRequest
 		{
 			GrantType = "authorization_code",
 			RedirectUri = "http://localhost:3000/callback"
@@ -85,10 +87,10 @@ public sealed class TokenExchangeTests(KeycloakOpenIdApiFixture apiFixture)
 	}
 
 	[Fact]
-	public async Task AnAuthorizationCodeRequest_WithMissingRedirectUri_ReturnsBadRequest()
+	public async Task CreateToken_ShouldReturnsBadRequest_WhenProcessingAuthorizationCodeRequestWithoutRedirectUri()
 	{
 		// Arrange
-		var request = new ExchangeTokenRequest
+		var request = new CreateTokenRequest
 		{
 			GrantType = "authorization_code",
 			Code = "test-code"
