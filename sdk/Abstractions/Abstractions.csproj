@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Bizca.Sdk.Abstractions</RootNamespace>
+		<AssemblyName>Bizca.Sdk.Abstractions</AssemblyName>
+		<PackageId>Bizca.Sdk.Abstractions</PackageId>
+		<Description>Bizca Sdk Abstractions nuget</Description>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" />
+			<PackageReference Include="Scrutor" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    </ItemGroup>
+
+</Project>

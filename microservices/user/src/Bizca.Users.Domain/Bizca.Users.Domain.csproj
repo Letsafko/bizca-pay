@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\sdk\Bizca.Sdk.SharedKernel\Bizca.Sdk.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\..\..\sdk\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 	
 </Project>

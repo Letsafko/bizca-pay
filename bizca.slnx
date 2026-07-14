@@ -1,8 +1,10 @@
-﻿<Solution>
+<Solution>
   <Folder Name="/gateway/">
     <File Path="gateway\README.md" />
   </Folder>
-  <Folder Name="/microservices/" />
+  <Folder Name="/microservices/">
+    <Project Path="microservices/Bizca.Services.AppHost/Bizca.Services.AppHost.csproj" />
+  </Folder>
   <Folder Name="/microservices/notification/">
     <File Path="microservices\notification\README.md" />
   </Folder>
@@ -13,17 +15,28 @@
     <File Path="microservices\user\README.md" />
   </Folder>
   <Folder Name="/microservices/user/src/">
-    <Project Path="microservices\user\src\Bizca.Users.Api\Bizca.Users.Api.csproj" Type="Classic C#" />
-    <Project Path="microservices\user\src\Bizca.Users.AppHost\Bizca.Users.AppHost.csproj" Type="Classic C#" />
-    <Project Path="microservices\user\src\Bizca.Users.Domain\Bizca.Users.Domain.csproj" Type="Classic C#" />
-    <Project Path="microservices\user\src\Bizca.Users.Infrastructure\Bizca.Users.Infrastructure.csproj" Type="Classic C#" />
+    <Project Path="microservices\user\src\Bizca.Users.Api\Bizca.Users.Api.csproj" />
+    <Project Path="microservices\user\src\Bizca.Users.Domain\Bizca.Users.Domain.csproj" />
+    <Project Path="microservices\user\src\Bizca.Users.Infrastructure\Bizca.Users.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/microservices/user/test/">
-    <Project Path="microservices\user\test\Bizca.User.IntegrationTests\Bizca.User.IntegrationTests.csproj" Type="Classic C#" />
+    <Project Path="microservices\user\test\Bizca.User.IntegrationTests\Bizca.User.IntegrationTests.csproj" />
+    <Project Path="microservices\user\test\Bizca.Users.UnitTests\Bizca.Users.UnitTests.csproj" />
   </Folder>
   <Folder Name="/sdk/">
-    <Project Path="sdk\Bizca.Sdk.SharedKernel\Bizca.Sdk.SharedKernel.csproj" Type="Classic C#" />
-    <File Path="sdk\README.md" />
+    <Project Path="sdk\Abstractions\Abstractions.csproj" Type="Classic C#" />
+    <Project Path="sdk\Api\Api.csproj" />
+    <Project Path="sdk\SharedKernel\SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/security/" />
+  <Folder Name="/security/src/">
+    <Project Path="security\src\Bizca.OpenId.ApiModels\Bizca.OpenId.ApiModels.csproj" Type="Classic C#" />
+    <Project Path="security\src\Bizca.OpenId.Application\Bizca.OpenId.Application.csproj" Type="Classic C#" />
+    <Project Path="security\src\Bizca.OpenId.Auth\Bizca.OpenId.Auth.csproj" />
+    <Project Path="security\src\Bizca.OpenId.Infrastructure\Bizca.OpenId.Infrastructure.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/security/test/">
+    <Project Path="security\test\Bizca.OpenId.IntegrationTests\Bizca.OpenId.IntegrationTests.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
