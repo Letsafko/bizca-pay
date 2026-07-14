@@ -41,7 +41,7 @@ public sealed class OpenApiOptionsValidator : AbstractValidator<OpenApiOptions>
 			.NotEmpty()
 			.WithMessage("{PropertyName} must be specified.");
 
-		RuleForEach(x => x.BearerSchemeName)
+		RuleFor(x => x.BearerSchemeName)
 			.NotEmpty()
 			.WithMessage("{PropertyName} must be specified.");
 
